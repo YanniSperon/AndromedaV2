@@ -7,97 +7,100 @@
 #include <vector>
 #include <queue>
 
-enum class InputState : uint16_t
-{
-	Idle = 0,
-	Pressed = 1,
-	Held = 2,
-	Released = 3
-};
-
-struct InputStateChange {
-	uint16_t m_Button;
-	uint16_t m_Type;
-
-	InputStateChange()
-		: m_Button(0), m_Type(0)
+namespace Andromeda {
+	enum class InputState : uint16_t
 	{
+		Idle = 0,
+		Pressed = 1,
+		Held = 2,
+		Released = 3
+	};
 
-	}
+	struct InputStateChange {
+		uint16_t m_Button;
+		uint16_t m_Type;
 
-	InputStateChange(uint16_t button, uint16_t type)
-		: m_Button(button), m_Type(type)
-	{
+		InputStateChange()
+			: m_Button(0), m_Type(0)
+		{
 
-	}
-};
+		}
 
-class Input {
-private:
-	std::vector<std::uint16_t> m_KeyboardKeyStates;
-	std::vector<std::uint16_t> m_MouseButtonStates;
-	std::vector<InputStateChange> m_PendingMouseStateChanges;
-	std::vector<InputStateChange> m_PendingKeyboardStateChanges;
-	double m_PendingScrollXInput;
-	double m_PendingScrollYInput;
+		InputStateChange(uint16_t button, uint16_t type)
+			: m_Button(button), m_Type(type)
+		{
 
-	double m_CurrentScrollXPos;
-	double m_CurrentScrollYPos;
+		}
+	};
 
-	double m_CurrentMouseXPos;
-	double m_CurrentMouseYPos;
+	class Input {
+	private:
+		// TODO
+		std::vector<std::uint16_t> m_KeyboardKeyStates;
+		std::vector<std::uint16_t> m_MouseButtonStates;
+		std::vector<InputStateChange> m_PendingMouseStateChanges;
+		std::vector<InputStateChange> m_PendingKeyboardStateChanges;
+		double m_PendingScrollXInput;
+		double m_PendingScrollYInput;
 
-	double m_OldMouseXPos;
-	double m_OldMouseYPos;
+		double m_CurrentScrollXPos;
+		double m_CurrentScrollYPos;
 
-	bool m_ShouldCaptureMouseInput;
-	bool m_ShouldCaptureKeyboardInput;
+		double m_CurrentMouseXPos;
+		double m_CurrentMouseYPos;
 
-	bool m_MouseWasBlocked;
-public:
-	Input();
-	~Input();
+		double m_OldMouseXPos;
+		double m_OldMouseYPos;
 
-	InputState GetKeyboardKeyState(uint16_t key);
-	bool GetKeyboardKeyIdle(uint16_t key);
-	bool GetKeyboardKeyPressed(uint16_t key);
-	bool GetKeyboardKeyHeld(uint16_t key);
-	bool GetKeyboardKeyReleased(uint16_t key);
-	void UpdateKeyboardKey(uint16_t key, uint16_t event);
+		bool m_ShouldCaptureMouseInput;
+		bool m_ShouldCaptureKeyboardInput;
 
-	InputState GetMouseButtonState(uint16_t button);
-	bool GetMouseButtonIdle(uint16_t button);
-	bool GetMouseButtonPressed(uint16_t button);
-	bool GetMouseButtonHeld(uint16_t button);
-	bool GetMouseButtonReleased(uint16_t button);
-	void UpdateMouseButton(uint16_t button, uint16_t event);
+		bool m_MouseWasBlocked;
+	public:
+		Input();
+		~Input();
 
-	void SetOldMousePosition(double x, double y);
-	void SetMousePosition(double x, double y);
-	void MoveMouseTo(double x, double y);
+		InputState GetKeyboardKeyState(uint16_t key);
+		bool GetKeyboardKeyIdle(uint16_t key);
+		bool GetKeyboardKeyPressed(uint16_t key);
+		bool GetKeyboardKeyHeld(uint16_t key);
+		bool GetKeyboardKeyReleased(uint16_t key);
+		void UpdateKeyboardKey(uint16_t key, uint16_t event);
 
-	void UpdateAddScrollPosition(double x, double y);
+		InputState GetMouseButtonState(uint16_t button);
+		bool GetMouseButtonIdle(uint16_t button);
+		bool GetMouseButtonPressed(uint16_t button);
+		bool GetMouseButtonHeld(uint16_t button);
+		bool GetMouseButtonReleased(uint16_t button);
+		void UpdateMouseButton(uint16_t button, uint16_t event);
 
-	double GetOldMousePositionX();
-	double GetOldMousePositionY();
-	double GetMousePositionX();
-	double GetMousePositionY();
-	double GetScrollPositionX();
-	double GetScrollPositionY();
+		void SetOldMousePosition(double x, double y);
+		void SetMousePosition(double x, double y);
+		void MoveMouseTo(double x, double y);
 
-	bool GetShouldCaptureMouse();
-	bool GetShouldCaptureKeyboard();
+		void UpdateAddScrollPosition(double x, double y);
 
-	// Put at the top of the run loop
-	void Prepare();
-	// Put at the bottom of the run loop
-	void Flush();
+		double GetOldMousePositionX();
+		double GetOldMousePositionY();
+		double GetMousePositionX();
+		double GetMousePositionY();
+		double GetScrollPositionX();
+		double GetScrollPositionY();
 
-	void SetShouldCaptureMouseInput(bool shouldCapture);
-	void SetShouldCaptureKeyboardInput(bool shouldCapture);
+		bool GetShouldCaptureMouse();
+		bool GetShouldCaptureKeyboard();
 
-	void SetMouseWasBlocked(bool mouseWasBlocked);
-};
+		// Put at the top of the run loop
+		void Prepare();
+		// Put at the bottom of the run loop
+		void Flush();
+
+		void SetShouldCaptureMouseInput(bool shouldCapture);
+		void SetShouldCaptureKeyboardInput(bool shouldCapture);
+
+		void SetMouseWasBlocked(bool mouseWasBlocked);
+	};
+}
 
 #define 	AD_KEY_UNKNOWN           0
 #define 	AD_KEY_SPACE             32

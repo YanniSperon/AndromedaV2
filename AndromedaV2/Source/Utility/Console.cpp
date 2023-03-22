@@ -11,6 +11,7 @@
 #include <Windows.h>
 #endif
 
+// TODO
 static std::mutex printMutex;
 
 void Console::Success(const char* fmt, ...)

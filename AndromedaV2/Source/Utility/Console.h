@@ -1,5 +1,7 @@
 #pragma once
 
+// TODO
+
 class Console {
 public:
 	static void Success(const char* fmt, ...);

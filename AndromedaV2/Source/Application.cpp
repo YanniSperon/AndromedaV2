@@ -112,12 +112,12 @@ int main() {
 			{
 			case GLFW_PRESS:
 			{
-				input->UpdateKeyboardKey(key, AD_KEY_PRESSED);
+				input->UpdateKeyboardKey(key, AD_KEY_STATE_PRESSED);
 				break;
 			}
 			case GLFW_RELEASE:
 			{
-				input->UpdateKeyboardKey(key, AD_KEY_RELEASED);
+				input->UpdateKeyboardKey(key, AD_KEY_STATE_RELEASED);
 				break;
 			}
 			}
