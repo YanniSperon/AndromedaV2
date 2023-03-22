@@ -1,0 +1,206 @@
+#include "Global.h"
+#include "Console.h"
+#include "Input.h"
+#include "glew.h"
+
+extern "C"
+{
+	__declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
+	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+}
+
+static void GLAPIENTRY GLDebugMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+	switch (severity)
+	{
+	case GL_DEBUG_SEVERITY_HIGH:
+		Console::FatalError("GL CALLBACK:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
+		break;
+	case GL_DEBUG_SEVERITY_MEDIUM:
+		Console::Error("GL CALLBACK:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
+		break;
+	case GL_DEBUG_SEVERITY_LOW:
+		Console::Warning("GL CALLBACK:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
+		break;
+#ifdef AD_VERBOSE
+	case GL_DEBUG_SEVERITY_NOTIFICATION:
+		Console::Info("GL NOTIFICATION:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
+		break;
+#endif
+	default:
+		break;
+	}
+}
+
+static double mouseSensitivity = 0.5;
+
+static int windowWidth = 1920;
+static int windowHeight = 1080;
+
+static bool didMove = false;
+
+int main() {
+	Global::Initialize();
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	Console::Assert(glfwInit(), "Failed GLFW Initialization!");
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "OpenGL", NULL, NULL);
+	Input* input = new Input();
+	input->SetShouldCaptureKeyboardInput(true);
+	input->SetShouldCaptureMouseInput(true);
+	Console::Assert(window, "Failed Window Creation!");
+	glfwMakeContextCurrent(window);
+	glfwSetWindowUserPointer(window, input);
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	GLenum err = glewInit();
+	Console::Assert(err == GLEW_OK, "Failed GLEW Initialization - %s", reinterpret_cast<char const*>(glewGetErrorString(err)));
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	glEnable(GL_DEBUG_OUTPUT);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glCullFace(GL_CCW);
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	if (glfwRawMouseMotionSupported()) {
+		glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, 1);
+	}
+	glfwSwapInterval(0);
+	glDebugMessageCallback(GLDebugMessageCallback, 0);
+	glfwSetErrorCallback([](int error, const char* description)
+		{
+			Console::Error("GLFW Error (%i): \"%s\"", error, description);
+		});
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	glfwSetCursorPosCallback(window, [](GLFWwindow* glfwWindow, double xPos, double yPos)
+		{
+			Input* input = (Input*)glfwGetWindowUserPointer(glfwWindow);
+
+			input->MoveMouseTo(xPos, yPos);
+
+			didMove = true;
+		});
+	glfwSetMouseButtonCallback(window, [](GLFWwindow* glfwWindow, int button, int action, int mods)
+		{
+			Input* input = (Input*)glfwGetWindowUserPointer(glfwWindow);
+
+			switch (action)
+			{
+			case GLFW_PRESS:
+			{
+				input->UpdateMouseButton(button, 1);
+				break;
+			}
+			case GLFW_RELEASE:
+			{
+				input->UpdateMouseButton(button, 3);
+				break;
+			}
+			}
+		});
+	glfwSetKeyCallback(window, [](GLFWwindow* glfwWindow, int key, int scancode, int action, int mods)
+		{
+			Input* input = (Input*)glfwGetWindowUserPointer(glfwWindow);
+
+			switch (action)
+			{
+			case GLFW_PRESS:
+			{
+				input->UpdateKeyboardKey(key, AD_KEY_PRESSED);
+				break;
+			}
+			case GLFW_RELEASE:
+			{
+				input->UpdateKeyboardKey(key, AD_KEY_RELEASED);
+				break;
+			}
+			}
+		});
+	glfwSetWindowSizeCallback(window, [](GLFWwindow* glfwWindow, int width, int height)
+		{
+			Input* input = (Input*)glfwGetWindowUserPointer(glfwWindow);
+
+			windowWidth = width;
+			windowHeight = height;
+		});
+	glfwSetScrollCallback(window, [](GLFWwindow* glfwWindow, double xOffset, double yOffset)
+		{
+			Input* input = (Input*)glfwGetWindowUserPointer(glfwWindow);
+
+			input->UpdateAddScrollPosition(xOffset, yOffset);
+		});
+	glfwSetCursorEnterCallback(window, [](GLFWwindow* glfwWindow, int entered)
+		{
+			Input* input = (Input*)glfwGetWindowUserPointer(glfwWindow);
+
+			input->SetMouseWasBlocked(true);
+		});
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	GLfloat value, max_anisotropy = 8.0f; /* don't exceed this value...*/
+	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &value);
+	Console::Warning("Anisotropy value: %f", value);
+	//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+	double timeConstant = 1.0;
+	auto lastTime = std::chrono::high_resolution_clock::now();
+	auto currentTime = lastTime;
+
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	while (!glfwWindowShouldClose(window)) {
+		currentTime = std::chrono::high_resolution_clock::now();
+		auto deltaTimeNanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - lastTime);
+		lastTime = currentTime;
+		double deltaTimeWithoutTimeFactor = deltaTimeNanoseconds.count() / 1000000000.0;
+		double deltaTime = deltaTimeWithoutTimeFactor * timeConstant;
+
+
+
+		glfwPollEvents();
+		input->Prepare();
+
+
+
+
+		//if (input->GetKeyboardKeyHeld(AD_KEY_W)) {
+		//	camera.MoveForward(deltaTime);
+		//}
+		if (input->GetKeyboardKeyPressed(AD_KEY_LEFT_ALT)) {
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			input->SetShouldCaptureMouseInput(true);
+			input->SetMouseWasBlocked(true);
+		}
+		if (input->GetKeyboardKeyPressed(AD_KEY_RIGHT_ALT)) {
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			input->SetShouldCaptureMouseInput(false);
+		}
+		//if (input->GetKeyboardKeyPressed(AD_KEY_O)) {
+		//	scene.GetTransparentPipeline().SetPSFXShader("Resources/Shaders/PSFX/Grayscale", SHADER_VERTEX_SHADER | SHADER_FRAGMENT_SHADER);
+		//}
+
+		//if (input->GetMousePositionX() != input->GetOldMousePositionX() || input->GetMousePositionY() != input->GetOldMousePositionY()) {
+		//	camera.LookAtMouse(mouseSensitivity, input->GetMousePositionX(), input->GetMousePositionY(), input->GetOldMousePositionX(), input->GetOldMousePositionY());
+		//}
+
+
+
+		glfwSwapBuffers(window);
+
+		input->Flush();
+		Global::Update();
+	}
+
+	glfwDestroyWindow(window);
+	glfwTerminate();
+
+	Global::Cleanup();
+}
