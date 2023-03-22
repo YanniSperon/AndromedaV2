@@ -3,6 +3,8 @@
 #include "Input.h"
 #include "glew.h"
 
+using namespace Andromeda;
+
 extern "C"
 {
 	__declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;

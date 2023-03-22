@@ -8,9 +8,12 @@ namespace Andromeda {
 		class Array {
 		private:
 			T* data;
-			uint64 
+			uint64 count;
 		public:
-
+			Array() 
+				: data(nullptr), count(0)
+			{
+			}
 		};
 	}
 }

@@ -35,7 +35,7 @@ namespace Andromeda {
 					DataType K;
 				};
 				struct {
-					DataType values[4];
+					DataType Values[4];
 				};
 			};
 
@@ -102,7 +102,7 @@ namespace Andromeda {
 
 
 
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator=(const Vector4D<OtherDataType>& other)
 			{
 				this->X = other.X;
@@ -114,7 +114,52 @@ namespace Andromeda {
 
 
 
-			template <typename OtherDataType>
+			template <class OtherDataType>
+			DataType& operator[](uint64 i)
+			{
+				return this->Values[i];
+			}
+
+
+
+			DataType GetMagnitude()
+			{
+				return std::sqrt((this->X * this->X) + (this->Y * this->Y) + (this->Z * this->Z) + (this->W * this->W));
+			}
+			DataType GetMagnitudeSquared()
+			{
+				return (this->X * this->X) + (this->Y * this->Y) + (this->Z * this->Z) + (this->W * this->W);
+			}
+			Vector4D<DataType>& Normalize()
+			{
+				DataType& invMag = DataType(1) / GetMagnitude();
+				this->X *= invMag;
+				this->Y *= invMag;
+				this->Z *= invMag;
+				this->W *= invMag;
+				return *this;
+			}
+			Vector4D<DataType>& Power(const DataType& exp)
+			{
+				this->X = std::pow(this->X, exp);
+				this->Y = std::pow(this->Y, exp);
+				this->Z = std::pow(this->Z, exp);
+				this->W = std::pow(this->W, exp);
+				return *this;
+			}
+			template <class OtherDataType>
+			Vector4D<DataType>& Power(const Vector4D<DataType>& exp)
+			{
+				this->X = std::pow(this->X, exp.X);
+				this->Y = std::pow(this->Y, exp.Y);
+				this->Z = std::pow(this->Z, exp.Z);
+				this->W = std::pow(this->W, exp.W);
+				return *this;
+			}
+
+
+
+			template <class OtherDataType>
 			Vector4D<DataType>& operator+=(const OtherDataType& other)
 			{
 				this->X += other;
@@ -123,7 +168,7 @@ namespace Andromeda {
 				this->W += other;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator+=(const Vector4D<OtherDataType>& other)
 			{
 				this->X += other.X;
@@ -132,7 +177,7 @@ namespace Andromeda {
 				this->W += other.W;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator-=(const OtherDataType& other)
 			{
 				this->X -= other;
@@ -141,7 +186,7 @@ namespace Andromeda {
 				this->W -= other;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator-=(const Vector4D<OtherDataType>& other)
 			{
 				this->X -= other.X;
@@ -153,7 +198,7 @@ namespace Andromeda {
 
 
 
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator*=(const OtherDataType& other)
 			{
 				this->X *= other;
@@ -162,7 +207,7 @@ namespace Andromeda {
 				this->W *= other;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator*=(const Vector4D<OtherDataType>& other)
 			{
 				this->X *= other.X;
@@ -171,7 +216,7 @@ namespace Andromeda {
 				this->W *= other.W;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator/=(const OtherDataType& other)
 			{
 				this->X /= other;
@@ -180,7 +225,7 @@ namespace Andromeda {
 				this->W /= other;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator/=(const Vector4D<OtherDataType>& other)
 			{
 				this->X /= other.X;
@@ -211,7 +256,7 @@ namespace Andromeda {
 
 
 
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator%=(const OtherDataType& other)
 			{
 				this->X %= other;
@@ -220,7 +265,7 @@ namespace Andromeda {
 				this->W %= other;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator%=(const Vector4D<OtherDataType>& other)
 			{
 				this->X %= other.X;
@@ -229,7 +274,7 @@ namespace Andromeda {
 				this->W %= other.W;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator&=(const OtherDataType& other)
 			{
 				this->X &= other;
@@ -238,7 +283,7 @@ namespace Andromeda {
 				this->W &= other;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator&=(const Vector4D<OtherDataType>& other)
 			{
 				this->X &= other.X;
@@ -247,7 +292,7 @@ namespace Andromeda {
 				this->W &= other.W;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator|=(const OtherDataType& other)
 			{
 				this->X |= other;
@@ -256,7 +301,7 @@ namespace Andromeda {
 				this->W |= other;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator|=(const Vector4D<OtherDataType>& other)
 			{
 				this->X |= other.X;
@@ -265,7 +310,7 @@ namespace Andromeda {
 				this->W |= other.W;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator^=(const OtherDataType& other)
 			{
 				this->X ^= other;
@@ -274,7 +319,7 @@ namespace Andromeda {
 				this->W ^= other;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator^=(const Vector4D<OtherDataType>& other)
 			{
 				this->X ^= other.X;
@@ -283,7 +328,7 @@ namespace Andromeda {
 				this->W ^= other.W;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator<<=(const OtherDataType& other)
 			{
 				this->X <<= other;
@@ -292,7 +337,7 @@ namespace Andromeda {
 				this->W <<= other;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator<<=(const Vector4D<OtherDataType>& other)
 			{
 				this->X <<= other.X;
@@ -301,7 +346,7 @@ namespace Andromeda {
 				this->W <<= other.W;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator>>=(const OtherDataType& other)
 			{
 				this->X >>= other;
@@ -310,7 +355,7 @@ namespace Andromeda {
 				this->W >>= other;
 				return *this;
 			}
-			template <typename OtherDataType>
+			template <class OtherDataType>
 			Vector4D<DataType>& operator>>=(const Vector4D<OtherDataType>& other)
 			{
 				this->X >>= other.X;
@@ -323,12 +368,12 @@ namespace Andromeda {
 
 
 
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator+(const Vector4D<DataType>& value)
 		{
 			return value;
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator-(const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(-value.X, -value.Y, -value.Z, -value.W);
@@ -336,37 +381,37 @@ namespace Andromeda {
 
 
 
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator+(const Vector4D<DataType>& value, const DataType& scalar)
 		{
 			return Vector4D<DataType>(value.X + scalar, value.Y + scalar, value.Z + scalar, value.W + scalar);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator+(const DataType& scalar, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(scalar + value.X, scalar + value.Y, scalar + value.Z, scalar + value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator+(const Vector4D<DataType>& value, const Vector2D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X + other.X, value.Y + other.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator+(const Vector2D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(value.X + other.X, value.Y + other.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator+(const Vector4D<DataType>& value, const Vector3D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X + other.X, value.Y + other.Y, value.Z + other.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator+(const Vector3D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(value.X + other.X, value.Y + other.Y, value.Z + other.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator+(const Vector4D<DataType>& value, const Vector4D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X + other.X, value.Y + other.Y, value.Z + other.Z, value.W + other.W);
@@ -374,37 +419,37 @@ namespace Andromeda {
 
 
 
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator-(const Vector4D<DataType>& value, const DataType& scalar)
 		{
 			return Vector4D<DataType>(value.X - scalar, value.Y - scalar, value.Z - scalar, value.W - scalar);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator-(const DataType& scalar, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(scalar - value.X, scalar - value.Y, scalar - value.Z, scalar - value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator-(const Vector4D<DataType>& value, const Vector2D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X - other.X, value.Y - other.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator-(const Vector2D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X - value.X, other.Y - value.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator-(const Vector4D<DataType>& value, const Vector3D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X - other.X, value.Y - other.Y, value.Z - other.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator-(const Vector3D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X - value.X, other.Y - value.Y, other.Z - value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator-(const Vector4D<DataType>& value, const Vector4D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X - other.X, value.Y - other.Y, value.Z - other.Z, value.W - other.W);
@@ -412,37 +457,37 @@ namespace Andromeda {
 
 
 
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator*(const Vector4D<DataType>& value, const DataType& scalar)
 		{
 			return Vector4D<DataType>(value.X * scalar, value.Y * scalar, value.Z * scalar, value.W * scalar);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator*(const DataType& scalar, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(scalar * value.X, scalar * value.Y, scalar * value.Z, scalar * value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator*(const Vector4D<DataType>& value, const Vector2D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X * other.X, value.Y * other.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator*(const Vector2D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(value.X * other.X, value.Y * other.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator*(const Vector4D<DataType>& value, const Vector3D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X * other.X, value.Y * other.Y, value.Z * other.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator*(const Vector3D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(value.X * other.X, value.Y * other.Y, value.Z * other.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator*(const Vector4D<DataType>& value, const Vector4D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X * other.X, value.Y * other.Y, value.Z * other.Z, value.W * other.W);
@@ -450,37 +495,37 @@ namespace Andromeda {
 
 
 
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator/(const Vector4D<DataType>& value, const DataType& scalar)
 		{
 			return Vector4D<DataType>(value.X / scalar, value.Y / scalar, value.Z / scalar, value.W / scalar);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator/(const DataType& scalar, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(scalar / value.X, scalar / value.Y, scalar / value.Z, scalar / value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator/(const Vector4D<DataType>& value, const Vector2D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X / other.X, value.Y / other.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator/(const Vector2D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X / value.X, other.Y / value.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator/(const Vector4D<DataType>& value, const Vector3D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X / other.X, value.Y / other.Y, value.Z / other.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator/(const Vector3D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X / value.X, other.Y / value.Y, other.Z / value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator/(const Vector4D<DataType>& value, const Vector4D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X / other.X, value.Y / other.Y, value.Z / other.Z, value.W / other.W);
@@ -488,37 +533,37 @@ namespace Andromeda {
 
 
 
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator%(const Vector4D<DataType>& value, const DataType& scalar)
 		{
 			return Vector4D<DataType>(value.X % scalar, value.Y % scalar, value.Z % scalar, value.W & scalar);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator%(const DataType& scalar, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(scalar % value.X, scalar % value.Y, scalar % value.Z, scalar % value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator%(const Vector4D<DataType>& value, const Vector2D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X % other.X, value.Y % other.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator%(const Vector2D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X % value.X, other.Y % value.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator%(const Vector4D<DataType>& value, const Vector3D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X % other.X, value.Y % other.Y, value.Z % other.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator%(const Vector3D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X % value.X, other.Y % value.Y, other.Z % value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator%(const Vector4D<DataType>& value, const Vector4D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X % other.X, value.Y % other.Y, value.Z % other.Z, value.W & other.W);
@@ -526,37 +571,37 @@ namespace Andromeda {
 
 
 
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator&(const Vector4D<DataType>& value, const DataType& scalar)
 		{
 			return Vector4D<DataType>(value.X & scalar, value.Y & scalar, value.Z & scalar, value.W & scalar);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator&(const DataType& scalar, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(scalar & value.X, scalar & value.Y, scalar & value.Z, scalar & value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator&(const Vector4D<DataType>& value, const Vector2D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X & other.X, value.Y & other.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator&(const Vector2D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X & value.X, other.Y & value.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator&(const Vector4D<DataType>& value, const Vector3D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X & other.X, value.Y & other.Y, value.Z & other.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator&(const Vector3D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X & value.X, other.Y & value.Y, other.Z & value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator&(const Vector4D<DataType>& value, const Vector4D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X & other.X, value.Y & other.Y, value.Z & other.Z, value.W & other.W);
@@ -564,37 +609,37 @@ namespace Andromeda {
 
 
 
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator|(const Vector4D<DataType>& value, const DataType& scalar)
 		{
 			return Vector4D<DataType>(value.X | scalar, value.Y | scalar, value.Z | scalar, value.W | scalar);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator|(const DataType& scalar, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(scalar | value.X, scalar | value.Y, scalar | value.Z, scalar | value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator|(const Vector4D<DataType>& value, const Vector2D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X | other.X, value.Y | other.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator|(const Vector2D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X | value.X, other.Y | value.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator|(const Vector4D<DataType>& value, const Vector3D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X | other.X, value.Y | other.Y, value.Z | other.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator|(const Vector3D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X | value.X, other.Y | value.Y, other.Z | value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator|(const Vector4D<DataType>& value, const Vector4D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X | other.X, value.Y | other.Y, value.Z | other.Z, value.W | other.W);
@@ -602,37 +647,37 @@ namespace Andromeda {
 
 
 
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator^(const Vector4D<DataType>& value, const DataType& scalar)
 		{
 			return Vector4D<DataType>(value.X ^ scalar, value.Y ^ scalar, value.Z ^ scalar, value.W ^ scalar);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator^(const DataType& scalar, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(scalar ^ value.X, scalar ^ value.Y, scalar ^ value.Z, scalar ^ value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator^(const Vector4D<DataType>& value, const Vector2D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X ^ other.X, value.Y ^ other.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator^(const Vector2D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X ^ value.X, other.Y ^ value.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator^(const Vector4D<DataType>& value, const Vector3D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X ^ other.X, value.Y ^ other.Y, value.Z ^ other.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator^(const Vector3D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X ^ value.X, other.Y ^ value.Y, other.Z ^ value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator^(const Vector4D<DataType>& value, const Vector4D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X ^ other.X, value.Y ^ other.Y, value.Z ^ other.Z, value.W ^ other.W);
@@ -640,37 +685,37 @@ namespace Andromeda {
 
 
 
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator<<(const Vector4D<DataType>& value, const DataType& scalar)
 		{
 			return Vector4D<DataType>(value.X << scalar, value.Y << scalar, value.Z << scalar, value.W << scalar);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator<<(const DataType& scalar, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(scalar << value.X, scalar << value.Y, scalar << value.Z, scalar << value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator<<(const Vector4D<DataType>& value, const Vector2D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X << other.X, value.Y << other.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator<<(const Vector2D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X << value.X, other.Y << value.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator<<(const Vector4D<DataType>& value, const Vector3D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X << other.X, value.Y << other.Y, value.Z << other.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator<<(const Vector3D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X << value.X, other.Y << value.Y, other.Z << value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator<<(const Vector4D<DataType>& value, const Vector4D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X << other.X, value.Y << other.Y, value.Z << other.Z, value.W << other.W);
@@ -678,37 +723,37 @@ namespace Andromeda {
 
 
 
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator>>(const Vector4D<DataType>& value, const DataType& scalar)
 		{
 			return Vector4D<DataType>(value.X >> scalar, value.Y >> scalar, value.Z >> scalar, value.W >> scalar);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator>>(const DataType& scalar, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(scalar >> value.X, scalar >> value.Y, scalar >> value.Z, scalar >> value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator>>(const Vector4D<DataType>& value, const Vector2D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X >> other.X, value.Y >> other.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator>>(const Vector2D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X >> value.X, other.Y >> value.Y, value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator>>(const Vector4D<DataType>& value, const Vector3D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X >> other.X, value.Y >> other.Y, value.Z >> other.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator>>(const Vector3D<DataType>& other, const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(other.X >> value.X, other.Y >> value.Y, other.Z >> value.Z, value.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator>>(const Vector4D<DataType>& value, const Vector4D<DataType>& other)
 		{
 			return Vector4D<DataType>(value.X >> other.X, value.Y >> other.Y, value.Z >> other.Z, value.W >> other.W);
@@ -716,7 +761,7 @@ namespace Andromeda {
 
 
 
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator~(const Vector4D<DataType>& value)
 		{
 			return Vector4D<DataType>(~value.X, ~value.Y, ~value.Z, ~value.W);
@@ -724,15 +769,12 @@ namespace Andromeda {
 
 
 
-		template <typename DataType>
+		template <class DataType>
 		bool operator==(const Vector4D<DataType>& value1, const Vector4D<DataType>& value2)
 		{
 			return value1.X == value2.X && value1.Y == value2.Y && value1.Z == value2.Z && value1.W == value2.W;
 		}
-
-
-
-		template <typename DataType>
+		template <class DataType>
 		bool operator!=(const Vector4D<DataType>& value1, const Vector4D<DataType>& value2)
 		{
 			return value1.X != value2.X || value1.Y != value2.Y || value1.Z != value2.Z || value1.W != value2.W;
@@ -740,12 +782,35 @@ namespace Andromeda {
 
 
 
-		template <typename DataType>
+		template <class DataType>
+		bool operator<(const Vector4D<DataType>& value1, const Vector4D<DataType>& value2)
+		{
+			return value1.X < value2.X && value1.Y < value2.Y && value1.Z < value2.Z && value1.W < value2.W;
+		}
+		template <class DataType>
+		bool operator<=(const Vector4D<DataType>& value1, const Vector4D<DataType>& value2)
+		{
+			return value1.X <= value2.X && value1.Y <= value2.Y && value1.Z <= value2.Z && value1.W <= value2.W;
+		}
+		template <class DataType>
+		bool operator>(const Vector4D<DataType>& value1, const Vector4D<DataType>& value2)
+		{
+			return value1.X > value2.X && value1.Y > value2.Y && value1.Z > value2.Z && value1.W > value2.W;
+		}
+		template <class DataType>
+		bool operator>=(const Vector4D<DataType>& value1, const Vector4D<DataType>& value2)
+		{
+			return value1.X >= value2.X && value1.Y >= value2.Y && value1.Z >= value2.Z && value1.W >= value2.W;
+		}
+
+
+
+		template <class DataType>
 		Vector4D<DataType> operator&&(const Vector4D<DataType>& value1, const Vector4D<DataType>& value2)
 		{
 			return Vector4D<DataType>(value1.X && value2.X, value1.Y && value2.Y, value1.Z && value2.Z, value1.W && value2.W);
 		}
-		template <typename DataType>
+		template <class DataType>
 		Vector4D<DataType> operator||(const Vector4D<DataType>& value1, const Vector4D<DataType>& value2)
 		{
 			return Vector4D<DataType>(value1.X || value2.X, value1.Y || value2.Y, value1.Z || value2.Z, value1.W || value2.W);
