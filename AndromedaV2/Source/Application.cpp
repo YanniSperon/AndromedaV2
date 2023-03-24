@@ -1,6 +1,6 @@
 #include "Global.h"
-#include "Console.h"
-#include "Input.h"
+#include "Utility/Console.h"
+#include "Utility/Input.h"
 #include "glew.h"
 
 using namespace Andromeda;
@@ -38,8 +38,6 @@ static double mouseSensitivity = 0.5;
 
 static int windowWidth = 1920;
 static int windowHeight = 1080;
-
-static bool didMove = false;
 
 int main() {
 	Global::Initialize();
@@ -86,7 +84,6 @@ int main() {
 
 			input->MoveMouseTo(xPos, yPos);
 
-			didMove = true;
 		});
 	glfwSetMouseButtonCallback(window, [](GLFWwindow* glfwWindow, int button, int action, int mods)
 		{
@@ -173,9 +170,6 @@ int main() {
 
 
 
-		//if (input->GetKeyboardKeyHeld(AD_KEY_W)) {
-		//	camera.MoveForward(deltaTime);
-		//}
 		if (input->GetKeyboardKeyPressed(AD_KEY_LEFT_ALT)) {
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 			input->SetShouldCaptureMouseInput(true);
@@ -185,10 +179,6 @@ int main() {
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 			input->SetShouldCaptureMouseInput(false);
 		}
-		//if (input->GetKeyboardKeyPressed(AD_KEY_O)) {
-		//	scene.GetTransparentPipeline().SetPSFXShader("Resources/Shaders/PSFX/Grayscale", SHADER_VERTEX_SHADER | SHADER_FRAGMENT_SHADER);
-		//}
-
 		//if (input->GetMousePositionX() != input->GetOldMousePositionX() || input->GetMousePositionY() != input->GetOldMousePositionY()) {
 		//	camera.LookAtMouse(mouseSensitivity, input->GetMousePositionX(), input->GetMousePositionY(), input->GetOldMousePositionX(), input->GetOldMousePositionY());
 		//}

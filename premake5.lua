@@ -4,13 +4,14 @@ workspace "AndromedaV2"
 	configurations
 	{
 		"Debug",
+		"DebugEditor",
 		"DebugOptimized",
+		"DebugOptimizedEditor",
 		"Release"
 	}
 	
 	platforms
 	{
-		"Editor",
 		"Win64",
 		"MacOS",
 		"Linux",
@@ -39,8 +40,7 @@ project "AndromedaV2"
 	{
 		"Dependencies/GLEW",
 		"Dependencies/GLFW",
-		"%{prj.name}/Source",
-		"%{prj.name}/Source/**"
+		"%{prj.name}/Source"
 	}
 	
 	libdirs
@@ -85,19 +85,28 @@ project "AndromedaV2"
 		defines "AD_DEBUG"
 		symbols "On"
 		optimize "Off"
+	
+	filter "configurations:DebugEditor"
+		defines "AD_DEBUG"
+		defines "AD_EDITOR"
+		symbols "On"
+		optimize "Off"
 		
 	filter "configurations:DebugOptimized"
 		defines "AD_DEBUG"
 		optimize "On"
 		symbols "On"
+		
+	filter "configurations:DebugOptimizedEditor"
+		defines "AD_DEBUG"
+		defines "AD_EDITOR"
+		symbols "On"
+		optimize "On"
 
 	filter "configurations:Release"
 		defines "AD_RELEASE"
 		optimize "On"
 		symbols "Off"
-	
-	filter "platforms:Editor"
-		defines "AD_EDITOR"
 		
 	filter "platforms:Win64"
 		defines "AD_WIN64"

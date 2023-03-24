@@ -1,5 +1,5 @@
 #include "Global.h"
-#include "Console.h"
+#include "Utility/Console.h"
 
 static std::vector<std::string> g_ConsoleLog;
 static std::chrono::steady_clock::time_point g_SystemStartTime;
@@ -13,11 +13,6 @@ void Global::Initialize()
 std::chrono::steady_clock::time_point& Global::GetStartTime()
 {
 	return g_SystemStartTime;
-}
-
-std::vector<std::string>& Global::GetConsoleLog()
-{
-	return g_ConsoleLog;
 }
 
 void Global::Update()

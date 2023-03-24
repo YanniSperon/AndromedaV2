@@ -1,14 +1,10 @@
 
 #pragma once
 
-#include "glfw3.h"
-
-#include <cstdint>
-#include <vector>
-#include <queue>
+#include "Types.h"
 
 namespace Andromeda {
-	enum class InputState : uint16_t
+	enum class InputState : uint16
 	{
 		Idle = 0,
 		Pressed = 1,
@@ -17,8 +13,8 @@ namespace Andromeda {
 	};
 
 	struct InputStateChange {
-		uint16_t m_Button;
-		uint16_t m_Type;
+		uint16 m_Button;
+		uint16 m_Type;
 
 		InputStateChange()
 			: m_Button(0), m_Type(0)
@@ -26,7 +22,7 @@ namespace Andromeda {
 
 		}
 
-		InputStateChange(uint16_t button, uint16_t type)
+		InputStateChange(uint16 button, uint16 type)
 			: m_Button(button), m_Type(type)
 		{
 
@@ -35,11 +31,10 @@ namespace Andromeda {
 
 	class Input {
 	private:
-		// TODO
-		std::vector<std::uint16_t> m_KeyboardKeyStates;
-		std::vector<std::uint16_t> m_MouseButtonStates;
-		std::vector<InputStateChange> m_PendingMouseStateChanges;
-		std::vector<InputStateChange> m_PendingKeyboardStateChanges;
+		Array<uint16> m_KeyboardKeyStates;
+		Array<uint16> m_MouseButtonStates;
+		Array<InputStateChange> m_PendingMouseStateChanges;
+		Array<InputStateChange> m_PendingKeyboardStateChanges;
 		double m_PendingScrollXInput;
 		double m_PendingScrollYInput;
 
@@ -60,19 +55,19 @@ namespace Andromeda {
 		Input();
 		~Input();
 
-		InputState GetKeyboardKeyState(uint16_t key);
-		bool GetKeyboardKeyIdle(uint16_t key);
-		bool GetKeyboardKeyPressed(uint16_t key);
-		bool GetKeyboardKeyHeld(uint16_t key);
-		bool GetKeyboardKeyReleased(uint16_t key);
-		void UpdateKeyboardKey(uint16_t key, uint16_t event);
+		InputState GetKeyboardKeyState(uint16 key);
+		bool GetKeyboardKeyIdle(uint16 key);
+		bool GetKeyboardKeyPressed(uint16 key);
+		bool GetKeyboardKeyHeld(uint16 key);
+		bool GetKeyboardKeyReleased(uint16 key);
+		void UpdateKeyboardKey(uint16 key, uint16 event);
 
-		InputState GetMouseButtonState(uint16_t button);
-		bool GetMouseButtonIdle(uint16_t button);
-		bool GetMouseButtonPressed(uint16_t button);
-		bool GetMouseButtonHeld(uint16_t button);
-		bool GetMouseButtonReleased(uint16_t button);
-		void UpdateMouseButton(uint16_t button, uint16_t event);
+		InputState GetMouseButtonState(uint16 button);
+		bool GetMouseButtonIdle(uint16 button);
+		bool GetMouseButtonPressed(uint16 button);
+		bool GetMouseButtonHeld(uint16 button);
+		bool GetMouseButtonReleased(uint16 button);
+		void UpdateMouseButton(uint16 button, uint16 event);
 
 		void SetOldMousePosition(double x, double y);
 		void SetMousePosition(double x, double y);

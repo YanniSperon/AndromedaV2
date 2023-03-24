@@ -2,7 +2,7 @@
 
 namespace Andromeda {
 	Input::Input()
-		: m_KeyboardKeyStates(512, 0), m_MouseButtonStates(16, 0), m_ShouldCaptureKeyboardInput(false), m_ShouldCaptureMouseInput(false), m_PendingMouseStateChanges(), m_PendingKeyboardStateChanges(), m_CurrentMouseXPos(0.0), m_CurrentMouseYPos(0.0), m_OldMouseXPos(0.0), m_OldMouseYPos(0.0), m_MouseWasBlocked(true), m_ScrollXPos(0.0), m_ScrollYPos(0.0), m_PendingScrollXInput(0.0), m_PendingScrollYInput(0.0)
+		: m_KeyboardKeyStates(512, 0), m_MouseButtonStates(16, 0), m_ShouldCaptureKeyboardInput(false), m_ShouldCaptureMouseInput(false), m_PendingMouseStateChanges(), m_PendingKeyboardStateChanges(), m_CurrentMouseXPos(0.0), m_CurrentMouseYPos(0.0), m_OldMouseXPos(0.0), m_OldMouseYPos(0.0), m_MouseWasBlocked(true), m_CurrentScrollXPos(0.0), m_CurrentScrollYPos(0.0), m_PendingScrollXInput(0.0), m_PendingScrollYInput(0.0)
 	{
 	}
 
@@ -10,64 +10,64 @@ namespace Andromeda {
 	{
 	}
 
-	InputState Input::GetKeyboardKeyState(uint16_t key)
+	InputState Input::GetKeyboardKeyState(uint16 key)
 	{
 		return static_cast<InputState>(m_KeyboardKeyStates[key]);
 	}
 
-	bool Input::GetKeyboardKeyIdle(uint16_t key)
+	bool Input::GetKeyboardKeyIdle(uint16 key)
 	{
 		return m_KeyboardKeyStates[key] == 0;
 	}
 
-	bool Input::GetKeyboardKeyPressed(uint16_t key)
+	bool Input::GetKeyboardKeyPressed(uint16 key)
 	{
 		return m_KeyboardKeyStates[key] == 1;
 	}
 
-	bool Input::GetKeyboardKeyHeld(uint16_t key)
+	bool Input::GetKeyboardKeyHeld(uint16 key)
 	{
 		return m_KeyboardKeyStates[key] == 2;
 	}
 
-	bool Input::GetKeyboardKeyReleased(uint16_t key)
+	bool Input::GetKeyboardKeyReleased(uint16 key)
 	{
 		return m_KeyboardKeyStates[key] == 3;
 	}
 
-	void Input::UpdateKeyboardKey(uint16_t key, uint16_t event)
+	void Input::UpdateKeyboardKey(uint16 key, uint16 event)
 	{
 		if (m_ShouldCaptureKeyboardInput) {
 			m_PendingKeyboardStateChanges.push_back(InputStateChange(key, event));
 		}
 	}
 
-	InputState Input::GetMouseButtonState(uint16_t button)
+	InputState Input::GetMouseButtonState(uint16 button)
 	{
 		return static_cast<InputState>(m_MouseButtonStates[button]);
 	}
 
-	bool Input::GetMouseButtonIdle(uint16_t button)
+	bool Input::GetMouseButtonIdle(uint16 button)
 	{
 		return m_MouseButtonStates[button] == 0;
 	}
 
-	bool Input::GetMouseButtonPressed(uint16_t button)
+	bool Input::GetMouseButtonPressed(uint16 button)
 	{
 		return m_MouseButtonStates[button] == 1;
 	}
 
-	bool Input::GetMouseButtonHeld(uint16_t button)
+	bool Input::GetMouseButtonHeld(uint16 button)
 	{
 		return m_MouseButtonStates[button] == 2;
 	}
 
-	bool Input::GetMouseButtonReleased(uint16_t button)
+	bool Input::GetMouseButtonReleased(uint16 button)
 	{
 		return m_MouseButtonStates[button] == 3;
 	}
 
-	void Input::UpdateMouseButton(uint16_t button, uint16_t event)
+	void Input::UpdateMouseButton(uint16 button, uint16 event)
 	{
 		if (m_ShouldCaptureMouseInput) {
 			m_PendingMouseStateChanges.push_back(InputStateChange(button, event));
