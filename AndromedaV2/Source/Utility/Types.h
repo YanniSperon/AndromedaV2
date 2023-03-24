@@ -1,44 +1,17 @@
 #pragma once
 
-#include <vector>
-#include <queue>
-#include <deque>
-#include <string>
-#include <mutex>
-#include <unordered_map>
-
-#include "IntTypes.h"
+#include "IntDefinitions.h"
+#include "TimeDefinitions.h"
+#include "StandardDefinitions.h"
+#include "StandardCollectionsDefinitions.h"
+#include "LedgeredList.h"
 #include "Vendor/glm/glm.hpp"
 
-namespace Andromeda {
+namespace Andromeda
+{
 
-	using int8 = int8_t;
-	using int16 = int16_t;
-	using int32 = int32_t;
-	using int64 = int64_t;
-
-	using uint8 = uint8_t;
-	using uint16 = uint16_t;
-	using uint32 = uint32_t;
-	using uint64 = uint64_t;
-
-	template <class T>
-	using Array = std::vector<T>;
-
-	template <class T, class U>
-	using HashMap = std::unordered_map<T, U>;
-
-	template <class T>
-	using Queue = std::queue<T>;
-
-	template <class T>
-	using DQueue = std::deque<T>;
-
-	using String = std::string;
-
-	using Mutex = std::mutex;
-
-	namespace Math {
+	namespace Math
+	{
 
 		using FVector2D = glm::vec2;
 		using DVector2D = glm::dvec2;

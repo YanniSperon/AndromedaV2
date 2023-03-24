@@ -13,12 +13,64 @@
 
 namespace Andromeda {
 
-	Console::Console(uint64 maxLogLength)
-		: m_Log(), m_PrintMutex(), m_MaxLogLength(maxLogLength)
+	Console::Console(uint64 maxLogLength, uint64 defaultBufferSize)
+		: m_Log(), m_PrintMutex(), m_MaxLogLength(maxLogLength), m_DefaultBufferSize(defaultBufferSize)
 	{
 	}
 
 	void Console::Success(const char* fmt, ...)
+	{
+		va_list args;
+		va_start(args, fmt);
+		Success(m_DefaultBufferSize, fmt, args);
+		va_end(args);
+	}
+
+	void Console::Info(const char* fmt, ...)
+	{
+		va_list args;
+		va_start(args, fmt);
+		Info(m_DefaultBufferSize, fmt, args);
+		va_end(args);
+	}
+
+	void Console::Warning(const char* fmt, ...)
+	{
+		va_list args;
+		va_start(args, fmt);
+		Warning(m_DefaultBufferSize, fmt, args);
+		va_end(args);
+	}
+
+	void Console::Error(const char* fmt, ...)
+	{
+		va_list args;
+		va_start(args, fmt);
+		Error(m_DefaultBufferSize, fmt, args);
+		va_end(args);
+	}
+
+	void Console::FatalError(const char* fmt, ...)
+	{
+		va_list args;
+		va_start(args, fmt);
+		FatalError(m_DefaultBufferSize, fmt, args);
+		va_end(args);
+	}
+
+	void Console::Assert(bool value, const char* fmt, ...)
+	{
+#ifdef AD_DEBUG
+		if (!value) {
+			va_list args;
+			va_start(args, fmt);
+			FatalError(m_DefaultBufferSize, fmt, args);
+			va_end(args);
+		}
+#endif
+	}
+
+	void Console::Success(uint64 bufferSize, const char* fmt, ...)
 	{
 #ifdef AD_DEBUG
 		va_list args;
@@ -36,8 +88,8 @@ namespace Andromeda {
 #endif
 		char* timestamp = new char[256];
 		snprintf(timestamp, 256, "%02ld:%02ld:%02lld.%03lld%03lld --    SUCCESS:    ", hours.count(), minutes.count(), seconds.count(), milliseconds.count(), microseconds.count());
-		char* message = new char[1024];
-		vsnprintf(message, 1024, fmt, args);
+		char* message = new char[bufferSize];
+		vsnprintf(message, bufferSize, fmt, args);
 		std::string returnValue = std::string(timestamp) + std::string(message);
 		printf("%s\n", returnValue.c_str());
 		m_Log.push_back(returnValue);
@@ -51,7 +103,7 @@ namespace Andromeda {
 #endif
 	}
 
-	void Console::Info(const char* fmt, ...)
+	void Console::Info(uint64 bufferSize, const char* fmt, ...)
 	{
 #ifdef AD_DEBUG
 		va_list args;
@@ -69,8 +121,8 @@ namespace Andromeda {
 #endif
 		char* timestamp = new char[256];
 		snprintf(timestamp, 256, "%02ld:%02ld:%02lld.%03lld%03lld --      INFO:     ", hours.count(), minutes.count(), seconds.count(), milliseconds.count(), microseconds.count());
-		char* message = new char[1024];
-		vsnprintf(message, 1024, fmt, args);
+		char* message = new char[bufferSize];
+		vsnprintf(message, bufferSize, fmt, args);
 		std::string returnValue = std::string(timestamp) + std::string(message);
 		printf("%s\n", returnValue.c_str());
 		m_Log.push_back(returnValue);
@@ -84,7 +136,7 @@ namespace Andromeda {
 #endif
 	}
 
-	void Console::Warning(const char* fmt, ...)
+	void Console::Warning(uint64 bufferSize, const char* fmt, ...)
 	{
 #ifdef AD_DEBUG
 		va_list args;
@@ -102,8 +154,8 @@ namespace Andromeda {
 #endif
 		char* timestamp = new char[256];
 		snprintf(timestamp, 256, "%02ld:%02ld:%02lld.%03lld%03lld --    WARNING:    ", hours.count(), minutes.count(), seconds.count(), milliseconds.count(), microseconds.count());
-		char* message = new char[1024];
-		vsnprintf(message, 1024, fmt, args);
+		char* message = new char[bufferSize];
+		vsnprintf(message, bufferSize, fmt, args);
 		std::string returnValue = std::string(timestamp) + std::string(message);
 		printf("%s\n", returnValue.c_str());
 		m_Log.push_back(returnValue);
@@ -117,7 +169,7 @@ namespace Andromeda {
 #endif
 	}
 
-	void Console::Error(const char* fmt, ...)
+	void Console::Error(uint64 bufferSize, const char* fmt, ...)
 	{
 #ifdef AD_DEBUG
 		va_list args;
@@ -135,8 +187,8 @@ namespace Andromeda {
 #endif
 		char* timestamp = new char[256];
 		snprintf(timestamp, 256, "%02ld:%02ld:%02lld.%03lld%03lld --     ERROR:     ", hours.count(), minutes.count(), seconds.count(), milliseconds.count(), microseconds.count());
-		char* message = new char[1024];
-		vsnprintf(message, 1024, fmt, args);
+		char* message = new char[bufferSize];
+		vsnprintf(message, bufferSize, fmt, args);
 		std::string returnValue = std::string(timestamp) + std::string(message);
 		printf("%s\n", returnValue.c_str());
 		m_Log.push_back(returnValue);
@@ -150,7 +202,7 @@ namespace Andromeda {
 #endif
 	}
 
-	void Console::FatalError(const char* fmt, ...)
+	void Console::FatalError(uint64 bufferSize, const char* fmt, ...)
 	{
 #ifdef AD_DEBUG
 		va_list args;
@@ -168,8 +220,8 @@ namespace Andromeda {
 #endif
 		char* timestamp = new char[256];
 		snprintf(timestamp, 256, "%02ld:%02ld:%02lld.%03lld%03lld --  FATAL ERROR:  ", hours.count(), minutes.count(), seconds.count(), milliseconds.count(), microseconds.count());
-		char* message = new char[1024];
-		vsnprintf(message, 1024, fmt, args);
+		char* message = new char[bufferSize];
+		vsnprintf(message, bufferSize, fmt, args);
 		std::string returnValue = std::string(timestamp) + std::string(message);
 		printf("%s\n", returnValue.c_str());
 		m_Log.push_back(returnValue);
@@ -180,18 +232,6 @@ namespace Andromeda {
 		va_end(args);
 		delete[] timestamp;
 		delete[] message;
-#endif
-	}
-
-	void Console::Assert(bool value, const char* fmt, ...)
-	{
-#ifdef AD_DEBUG
-		if (!value) {
-			va_list args;
-			va_start(args, fmt);
-			FatalError(fmt, args);
-			va_end(args);
-		}
 #endif
 	}
 }

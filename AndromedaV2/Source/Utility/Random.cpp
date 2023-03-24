@@ -8,7 +8,7 @@ namespace Andromeda {
 		m_Engine = std::mt19937();
 		m_Engine.seed(m_Seed);
 
-		SetFloatBounds(-FLT_MAX, FLT_MAX);
+		SetFloatBounds(0, 1.0f);
 		SetIntBounds(INT32_MIN, INT32_MAX);
 		SetUIntBounds(0, UINT32_MAX);
 	}
@@ -19,7 +19,7 @@ namespace Andromeda {
 		m_Engine = std::mt19937();
 		m_Engine.seed(m_Seed);
 
-		SetFloatBounds(-FLT_MAX, FLT_MAX);
+		SetFloatBounds(0, 1.0f);
 		SetIntBounds(INT32_MIN, INT32_MAX);
 		SetUIntBounds(0, UINT32_MAX);
 	}
@@ -61,7 +61,7 @@ namespace Andromeda {
 
 	void Random32::ResetFloatBounds()
 	{
-		SetFloatBounds(-FLT_MAX, FLT_MAX);
+		SetFloatBounds(0.0f, 1.0f);
 	}
 
 	void Random32::ResetIntBounds()
@@ -81,7 +81,7 @@ namespace Andromeda {
 		m_Engine = std::mt19937_64();
 		m_Engine.seed(m_Seed);
 
-		SetDoubleBounds(-DBL_MAX, DBL_MAX);
+		SetDoubleBounds(0.0, 1.0);
 		SetIntBounds(INT64_MIN, INT64_MAX);
 		SetUIntBounds(0, UINT64_MAX);
 	}
@@ -92,7 +92,7 @@ namespace Andromeda {
 		m_Engine = std::mt19937_64();
 		m_Engine.seed(m_Seed);
 
-		SetDoubleBounds(-DBL_MAX, DBL_MAX);
+		SetDoubleBounds(0.0, 1.0);
 		SetIntBounds(INT64_MIN, INT64_MAX);
 		SetUIntBounds(0, UINT64_MAX);
 	}

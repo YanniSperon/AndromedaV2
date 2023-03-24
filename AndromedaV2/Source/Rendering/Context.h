@@ -6,7 +6,7 @@ namespace Andromeda {
 	namespace Graphics {
 		class Context {
 		public:
-			virtual ~Context() = 0;
+			virtual ~Context();
 
 			virtual void Initialize() = 0;
 			virtual void PrepareFrame() = 0;

@@ -1,13 +1,17 @@
 #pragma once
 
-#include <vector>
-#include <string>
-#include <chrono>
+#include "Utility/TimeDefinitions.h"
+#include "Utility/Console.h"
 
-class Global {
-public:
-	static void Initialize(/*uint64 instanceID*/);
-	static std::chrono::steady_clock::time_point& GetStartTime();
-	static void Update();
-	static void Cleanup();
-};
+//TODO
+
+namespace Andromeda {
+	class Global {
+	public:
+		static void Initialize(/*uint64 instanceID*/);
+		static Console& GetConsoleInstance();
+		static TimePoint& GetStartTime();
+		static void Update();
+		static void Cleanup();
+	};
+}

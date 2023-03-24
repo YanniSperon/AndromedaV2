@@ -55,7 +55,7 @@
     <ClInclude Include="Source\Utility\Input.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Utility\List.h">
+    <ClInclude Include="Source\Utility\LedgeredList.h">
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Source\Utility\MathExtensions.h">
@@ -928,6 +928,10 @@
     <ClInclude Include="Source\Vendor\stb\stb_image.h">
       <Filter>Vendor\stb</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Utility\IntDefinitions.h" />
+    <ClInclude Include="Source\Utility\TimeDefinitions.h" />
+    <ClInclude Include="Source\Utility\StandardCollectionsDefinitions.h" />
+    <ClInclude Include="Source\Utility\StandardDefinitions.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
@@ -953,5 +957,7 @@
     <ClCompile Include="Source\Vendor\stb\stb_image.cpp">
       <Filter>Vendor\stb</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Utility\UUID.cpp" />
+    <ClCompile Include="Source\Rendering\Context.cpp" />
   </ItemGroup>
 </Project>

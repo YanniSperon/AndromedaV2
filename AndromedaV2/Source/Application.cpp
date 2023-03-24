@@ -1,7 +1,11 @@
 #include "Global.h"
 #include "Utility/Console.h"
 #include "Utility/Input.h"
+#include "Utility/Types.h"
+#include "Utility/Random.h"
+
 #include "glew.h"
+#include "glfw3.h"
 
 using namespace Andromeda;
 
@@ -16,17 +20,17 @@ static void GLAPIENTRY GLDebugMessageCallback(GLenum source, GLenum type, GLuint
 	switch (severity)
 	{
 	case GL_DEBUG_SEVERITY_HIGH:
-		Console::FatalError("GL CALLBACK:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
+		Global::GetConsoleInstance().FatalError("GL CALLBACK:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
 		break;
 	case GL_DEBUG_SEVERITY_MEDIUM:
-		Console::Error("GL CALLBACK:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
+		Global::GetConsoleInstance().Error("GL CALLBACK:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
 		break;
 	case GL_DEBUG_SEVERITY_LOW:
-		Console::Warning("GL CALLBACK:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
+		Global::GetConsoleInstance().Warning("GL CALLBACK:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
 		break;
 #ifdef AD_VERBOSE
 	case GL_DEBUG_SEVERITY_NOTIFICATION:
-		Console::Info("GL NOTIFICATION:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
+		Global::GetConsoleInstance().Info("GL NOTIFICATION:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
 		break;
 #endif
 	default:
@@ -42,7 +46,7 @@ static int windowHeight = 1080;
 int main() {
 	Global::Initialize();
 	//////////////////////////////////////////////////////////////////////////////////////////////
-	Console::Assert(glfwInit(), "Failed GLFW Initialization!");
+	Global::GetConsoleInstance().Assert(glfwInit(), "Failed GLFW Initialization!");
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -52,12 +56,12 @@ int main() {
 	Input* input = new Input();
 	input->SetShouldCaptureKeyboardInput(true);
 	input->SetShouldCaptureMouseInput(true);
-	Console::Assert(window, "Failed Window Creation!");
+	Global::GetConsoleInstance().Assert(window, "Failed Window Creation!");
 	glfwMakeContextCurrent(window);
 	glfwSetWindowUserPointer(window, input);
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	GLenum err = glewInit();
-	Console::Assert(err == GLEW_OK, "Failed GLEW Initialization - %s", reinterpret_cast<char const*>(glewGetErrorString(err)));
+	Global::GetConsoleInstance().Assert(err == GLEW_OK, "Failed GLEW Initialization - %s", reinterpret_cast<char const*>(glewGetErrorString(err)));
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEPTH_TEST);
@@ -75,7 +79,7 @@ int main() {
 	glDebugMessageCallback(GLDebugMessageCallback, 0);
 	glfwSetErrorCallback([](int error, const char* description)
 		{
-			Console::Error("GLFW Error (%i): \"%s\"", error, description);
+			Global::GetConsoleInstance().Error("GLFW Error (%i): \"%s\"", error, description);
 		});
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	glfwSetCursorPosCallback(window, [](GLFWwindow* glfwWindow, double xPos, double yPos)
@@ -145,11 +149,31 @@ int main() {
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	GLfloat value, max_anisotropy = 8.0f; /* don't exceed this value...*/
 	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &value);
-	Console::Warning("Anisotropy value: %f", value);
+	Global::GetConsoleInstance().Warning("Anisotropy value: %f", value);
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
+
+
+
+	Random32 randGen;
+	randGen.SetIntBounds(0, 1000);
+	LedgeredList<int32> temp;
+	for (uint32 i = 0; i < 250; ++i)
+	{
+		temp.PushFront(randGen.Int32Inclusive());
+	}
+	Global::GetConsoleInstance().Info(16384, "%s", temp.ToString().c_str());
+
+	
+
+
+
+
+
+
+	//////////////////////////////////////////////////////////////////////////////////////////////
 	double timeConstant = 1.0;
 	auto lastTime = std::chrono::high_resolution_clock::now();
 	auto currentTime = lastTime;

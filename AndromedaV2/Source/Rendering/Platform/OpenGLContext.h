@@ -4,15 +4,15 @@
 
 namespace Andromeda {
 	namespace Graphics {
-		class Context {
+		class OpenGLContext : public Context {
 		public:
-			Context(bool deferInitialization = false);
-			virtual ~Context();
+			OpenGLContext(bool deferInitialization = false);
+			virtual ~OpenGLContext() override;
 
-			virtual void Initialize();
-			virtual void PrepareFrame();
-			virtual void EndFrame();
-			virtual void Deinitialize();
+			virtual void Initialize() override;
+			virtual void PrepareFrame() override;
+			virtual void EndFrame() override;
+			virtual void Deinitialize() override;
 		};
 	}
 }

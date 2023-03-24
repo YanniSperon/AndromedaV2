@@ -6,9 +6,14 @@
 namespace Andromeda {
 	class PointerManager {
 	private:
-		HashMap<UUID, void*> m_Map;
+		HashMap<void*, UniquePointer*> m_UniqueMap;
+		HashMap<void*, LinkedList<SharedPointer*>> m_SharedMap;
+		HashMap<void*, LinkedList<WeakPointer*>> m_WeakMap;
 	public:
-		void FlagDelete(void* pointer);
+		void FlagDelete(UniquePointer* pointer);
+		void FlagDelete(SharedPointer* pointer);
+		void FlagDelete(UniquePointer* pointer);
+		void AddUniquePointer(void* pointer);
 	};
 
 	class UniquePointer {

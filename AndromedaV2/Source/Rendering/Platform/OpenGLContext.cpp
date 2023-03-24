@@ -2,28 +2,27 @@
 
 namespace Andromeda {
 	namespace Graphics {
-		Context::Context(bool deferInitialization)
-		{
-
-		}
-
-		Context::~Context()
+		OpenGLContext::OpenGLContext(bool deferInitialization)
 		{
 		}
 
-		void Context::Initialize()
+		OpenGLContext::~OpenGLContext()
 		{
 		}
 
-		void Context::PrepareFrame()
+		void OpenGLContext::Initialize()
 		{
 		}
 
-		void Context::EndFrame()
+		void OpenGLContext::PrepareFrame()
 		{
 		}
 
-		void Context::Deinitialize()
+		void OpenGLContext::EndFrame()
+		{
+		}
+
+		void OpenGLContext::Deinitialize()
 		{
 		}
 	}
