@@ -154,26 +154,6 @@ int main() {
 
 
 
-
-
-
-	Random32 randGen;
-	randGen.SetIntBounds(0, 1000);
-	LedgeredList<int32> temp;
-	for (uint32 i = 0; i < 250; ++i)
-	{
-		temp.PushFront(randGen.Int32Inclusive());
-	}
-	Global::GetConsoleInstance().Info(16384, "%s", temp.ToString().c_str());
-
-	
-
-
-
-
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////
 	double timeConstant = 1.0;
 	auto lastTime = std::chrono::high_resolution_clock::now();
 	auto currentTime = lastTime;

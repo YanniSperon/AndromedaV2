@@ -13,7 +13,7 @@ namespace Andromeda
 	template <class T>
 	class LedgeredList
 	{
-	private:
+	public:
 		struct Node
 		{
 		public:
@@ -21,7 +21,7 @@ namespace Andromeda
 			Node* m_Prev;
 			Node* m_Next;
 		};
-
+	private:
 		Node* m_Head;
 		Node* m_Tail;
 		Array<Node*> m_Ledger;
@@ -31,15 +31,15 @@ namespace Andromeda
 
 		Node* GetNodeAndIndices(uint64 nodeIndex, uint64& ledgerIndex, uint64& ledgerIncrement) const
 		{
-			ledgerIndex = nodeIndex / m_Increment;
-			ledgerIncrement = nodeIndex % m_Increment;
+			ledgerIndex = (nodeIndex + 1ull) / m_Increment;
+			ledgerIncrement = (nodeIndex + (ledgerIndex != 0)) % m_Increment;
 
 			Node* cursor = nullptr;
 			if (ledgerIncrement > (m_Increment / 2ull) &&
 				(ledgerIndex + 1ull) < m_Ledger.size())
 			{
 				cursor = m_Ledger[ledgerIndex + 1ull];
-				for (uint64 i = 0ull; i < (m_Increment - ledgerIncrement); ++i)
+				for (uint64 i = 1ull - (ledgerIndex != 0); i < (m_Increment - ledgerIncrement); ++i)
 				{
 					cursor = cursor->m_Prev;
 				}
@@ -91,11 +91,16 @@ namespace Andromeda
 		{
 			Node* cursor = m_Head;
 			Node* lastCursor = nullptr;
+
 			for (uint64 i = 0ull; i < m_Size; ++i) {
 				lastCursor = cursor;
 				cursor = cursor->m_Next;
 				delete lastCursor;
 			}
+
+			m_Head = nullptr;
+			m_Tail = nullptr;
+			m_Size = 0ull;
 		}
 
 		T& operator[](uint64 index)
@@ -106,16 +111,44 @@ namespace Andromeda
 		T& Get(uint64 index)
 		{
 #ifdef AD_DEBUG
-			if (index >= m_Size)
-			{
-				Global::GetConsoleInstance().FatalError("Index %llu out of bounds", index);
-			}
+			Global::GetConsoleInstance().Assert(index < m_Size, "Index %llu out of bounds!", index);
 #endif
 			uint64 ledgerIndex, ledgerIncrement;
 			return GetNodeAndIndices(index, ledgerIndex, ledgerIncrement)->m_Val;
 		}
+	
+		// Get the node for iteration, do not try to manipulate the node structure
+		// this is only for reading and setting the values of nodes
+		const Node* GetNode(uint64 index) const
+		{
+#ifdef AD_DEBUG
+			Global::GetConsoleInstance().Assert(index < m_Size, "Index %llu out of bounds!", index);
+#endif
+			uint64 ledgerIndex, ledgerIncrement;
+			return GetNodeAndIndices(index, ledgerIndex, ledgerIncrement);
+		}
 
-		void Insert(const T& value, uint64 index)
+		// Get the node for iteration, do not try to manipulate the node structure
+		// this is only for reading and setting the values of nodes
+		const Node* GetHeadNode() const
+		{
+#ifdef AD_DEBUG
+			Global::GetConsoleInstance().Assert(m_Head, "Head node does not exist!");
+#endif
+			return m_Head;
+		}
+
+		// Get the node for iteration, do not try to manipulate the node structure
+		// this is only for reading and setting the values of nodes
+		const Node* GetTailNode() const
+		{
+#ifdef AD_DEBUG
+			Global::GetConsoleInstance().Assert(m_Tail, "Tail node does not exist!");
+#endif
+			return m_Tail;
+		}
+
+		void Insert(uint64 index, const T& value)
 		{
 			if (index > 0 && index < m_Size)
 			{
@@ -170,23 +203,25 @@ namespace Andromeda
 			if (prevHead)
 			{
 				prevHead->m_Prev = m_Head;
+
+				for (uint64 i = 0ull; i < m_Ledger.size(); ++i)
+				{
+					m_Ledger[i] = m_Ledger[i]->m_Prev;
+				}
+
+				++m_Size;
+
+				if (m_Size % m_Increment == 0)
+				{
+					m_Ledger.push_back(m_Tail);
+				}
 			}
 			else
 			{
 				m_Tail = m_Head;
 				m_Ledger.push_back(m_Head);
-			}
 
-			for (uint64 i = 0ull; i < m_Ledger.size() - 1ull; ++i)
-			{
-				m_Ledger[i] = m_Ledger[i]->m_Prev;
-			}
-
-			++m_Size;
-
-			if (m_Size % m_Increment == 0)
-			{
-				m_Ledger.push_back(m_Tail);
+				++m_Size;
 			}
 		}
 
@@ -199,18 +234,20 @@ namespace Andromeda
 			if (prevTail)
 			{
 				prevTail->m_Next = m_Tail;
+
+				++m_Size;
+
+				if (m_Size % m_Increment == 0)
+				{
+					m_Ledger.push_back(m_Tail);
+				}
 			}
 			else
 			{
-				m_Tail = m_Head;
-				m_Ledger.push_back(m_Head);
-			}
-
-			++m_Size;
-
-			if (m_Size % m_Increment == 0)
-			{
+				m_Head = m_Tail;
 				m_Ledger.push_back(m_Tail);
+
+				++m_Size;
 			}
 		}
 
@@ -230,7 +267,7 @@ namespace Andromeda
 				{
 					uint64 ledgerIndex, ledgerIncrement;
 					Node* cursor = GetNodeAndIndices(index, ledgerIndex, ledgerIncrement);
-				
+					
 					if (cursor->m_Prev)
 					{
 						cursor->m_Prev->m_Next = cursor->m_Next;
@@ -240,14 +277,15 @@ namespace Andromeda
 						cursor->m_Next->m_Prev = cursor->m_Prev;
 					}
 
-					delete cursor;
-
 					--m_Size;
 
 					for (uint64 i = ((ledgerIncrement == 0ull) ? ledgerIndex : ledgerIndex + 1ull); i < m_Ledger.size(); ++i)
 					{
 						m_Ledger[i] = m_Ledger[i]->m_Next;
 					}
+
+					delete cursor;
+
 					if (!m_Ledger[m_Ledger.size() - 1ull])
 					{
 						m_Ledger.pop_back();
@@ -270,7 +308,6 @@ namespace Andromeda
 				}
 				Node* prevHead = m_Head;
 				m_Head = m_Head->m_Next;
-				delete prevHead;
 
 				--m_Size;
 
@@ -278,6 +315,8 @@ namespace Andromeda
 				{
 					m_Ledger[i] = m_Ledger[i]->m_Next;
 				}
+
+				delete prevHead;
 
 				if (!m_Ledger[m_Ledger.size() - 1ull])
 				{
@@ -304,11 +343,34 @@ namespace Andromeda
 
 				--m_Size;
 
-				if (m_Size < m_Ledger.size() * m_Increment)
+				if (m_Size < (((m_Ledger.size() - 1ull) * m_Increment) - 1ull))
 				{
 					m_Ledger.pop_back();
 				}
 			}
+		}
+
+		void Clear()
+		{
+			m_Ledger.clear();
+
+			Node* cursor = m_Head;
+			Node* lastCursor = nullptr;
+
+			for (uint64 i = 0ull; i < m_Size; ++i) {
+				lastCursor = cursor;
+				cursor = cursor->m_Next;
+				delete lastCursor;
+			}
+
+			m_Head = nullptr;
+			m_Tail = nullptr;
+			m_Size = 0ull;
+		}
+
+		uint64 GetSize() const
+		{
+			return m_Size;
 		}
 
 #ifdef AD_DEBUG
