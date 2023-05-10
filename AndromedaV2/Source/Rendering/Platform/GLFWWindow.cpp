@@ -32,26 +32,25 @@ namespace Andromeda {
 			GLFWWindow::GLFWWindow(uint32 width, uint32 height, const String& windowTitle)
 				: m_WindowHandle(nullptr), Window(width, height, windowTitle)
 			{
-				// Initialize already called by superclass
-				// Parent information already initialized
 			}
 
 			GLFWWindow::~GLFWWindow()
 			{
-				// Deinitialize already called by superclass
-				// Parent information already cleaned up
+				if (m_IsInitialized)
+				{
+					Deinitialize();
+				}
 			}
 
-			void GLFWWindow::Initialize()
+			void GLFWWindow::InternalInitialize(GLFWwindow* parentHandle)
 			{
-				Global::GetConsoleInstance().Info("Initialize called");
 				glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 				glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 				glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 				glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 				//////////////////////////////////////////////////////////////////////////////////////////////
 				// monitor = glfwGetPrimaryMonitor()
-				m_WindowHandle = glfwCreateWindow(m_Width, m_Height, m_WindowTitle.c_str(), NULL, NULL);
+				m_WindowHandle = glfwCreateWindow(m_Width, m_Height, m_WindowTitle.c_str(), NULL, parentHandle);
 				Global::GetConsoleInstance().Assert(m_WindowHandle, "Failed Window Creation!");
 				glfwMakeContextCurrent(m_WindowHandle);
 				//////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,33 +79,32 @@ namespace Andromeda {
 				//////////////////////////////////////////////////////////////////////////////////////////////
 				glfwSetCursorPosCallback(m_WindowHandle, [](GLFWwindow* glfwWindow, double xPos, double yPos)
 					{
-						OpenGLContext* ctx = static_cast<OpenGLContext*>(glfwGetWindowUserPointer(glfwWindow));
+						Context* ctx = static_cast<Context*>(glfwGetWindowUserPointer(glfwWindow));
 
 						ctx->m_Input.MoveMouseTo(xPos, yPos);
 
 					});
 				glfwSetMouseButtonCallback(m_WindowHandle, [](GLFWwindow* glfwWindow, int button, int action, int mods)
 					{
-						OpenGLContext* ctx = static_cast<OpenGLContext*>(glfwGetWindowUserPointer(glfwWindow));
-						Input* input = (Input*)glfwGetWindowUserPointer(glfwWindow);
+						Context* ctx = static_cast<Context*>(glfwGetWindowUserPointer(glfwWindow));
 
 						switch (action)
 						{
 						case GLFW_PRESS:
 						{
-							input->UpdateMouseButton(button, 1);
+							ctx->m_Input.UpdateMouseButton(button, 1);
 							break;
 						}
 						case GLFW_RELEASE:
 						{
-							input->UpdateMouseButton(button, 3);
+							ctx->m_Input.UpdateMouseButton(button, 3);
 							break;
 						}
 						}
 					});
 				glfwSetKeyCallback(m_WindowHandle, [](GLFWwindow* glfwWindow, int key, int scancode, int action, int mods)
 					{
-						OpenGLContext* ctx = static_cast<OpenGLContext*>(glfwGetWindowUserPointer(glfwWindow));
+						Context* ctx = static_cast<Context*>(glfwGetWindowUserPointer(glfwWindow));
 
 						switch (action)
 						{
@@ -132,13 +130,13 @@ namespace Andromeda {
 					});
 				glfwSetScrollCallback(m_WindowHandle, [](GLFWwindow* glfwWindow, double xOffset, double yOffset)
 					{
-						OpenGLContext* ctx = static_cast<OpenGLContext*>(glfwGetWindowUserPointer(glfwWindow));
+						Context* ctx = static_cast<Context*>(glfwGetWindowUserPointer(glfwWindow));
 
 						ctx->m_Input.UpdateAddScrollPosition(xOffset, yOffset);
 					});
 				glfwSetCursorEnterCallback(m_WindowHandle, [](GLFWwindow* glfwWindow, int entered)
 					{
-						OpenGLContext* ctx = static_cast<OpenGLContext*>(glfwGetWindowUserPointer(glfwWindow));
+						Context* ctx = static_cast<Context*>(glfwGetWindowUserPointer(glfwWindow));
 
 						ctx->m_Input.SetMouseWasBlocked(true);
 					});
@@ -151,8 +149,24 @@ namespace Andromeda {
 				//////////////////////////////////////////////////////////////////////////////////////////////
 			}
 
+			void GLFWWindow::Initialize()
+			{
+				Global::GetConsoleInstance().Warning("Initializing GLFWWindow");
+				Window::Initialize();
+				InternalInitialize(nullptr);
+			}
+
+			void GLFWWindow::Initialize(Window* parent)
+			{
+				Global::GetConsoleInstance().Warning("Initializing GLFWWindow with parent");
+				Window::Initialize(parent);
+				InternalInitialize(static_cast<GLFWWindow*>(parent)->m_WindowHandle);
+			}
+
 			void GLFWWindow::Deinitialize()
 			{
+				Global::GetConsoleInstance().Warning("Deinitializing GLFWWindow");
+				Window::Deinitialize();
 				glfwDestroyWindow(m_WindowHandle);
 			}
 
@@ -165,12 +179,12 @@ namespace Andromeda {
 				// TODO MOVE THIS INTO A SEPERATE FILE AND NEW WINDOWS SHOULD INHERIT FROM GLFWWINDOW. MAYBE INSTEAD NEW WINDOWS INHERIT FROM A CUSTOMWINDOW CLASS WHICH
 				// HAS A MEMBER WHICH IS EITHER GLFWWINDOW OR WHATEVER PLATFORM WINDOW YOU ARE USING.
 				if (ctx->m_Input.GetKeyboardKeyPressed(AD_KEY_LEFT_ALT)) {
-					glfwSetInputMode(m_WindowHandle, AD_CURSOR, AD_CURSOR_DISABLED);
+					SetInputMode(AD_CURSOR, AD_CURSOR_DISABLED);
 					ctx->m_Input.SetShouldCaptureMouseInput(true);
 					ctx->m_Input.SetMouseWasBlocked(true);
 				}
 				if (ctx->m_Input.GetKeyboardKeyPressed(AD_KEY_RIGHT_ALT)) {
-					glfwSetInputMode(m_WindowHandle, AD_CURSOR, AD_CURSOR_NORMAL);
+					SetInputMode(AD_CURSOR, AD_CURSOR_NORMAL);
 					ctx->m_Input.SetShouldCaptureMouseInput(false);
 				}
 
@@ -182,6 +196,9 @@ namespace Andromeda {
 			void GLFWWindow::Render(Array<Renderer*>& renderers)
 			{
 				// TODO SAME AS FUNCTION ABOVE
+				glfwMakeContextCurrent(m_WindowHandle);
+				glClearColor(static_cast<float>(m_ClearColor.r), static_cast<float>(m_ClearColor.g), static_cast<float>(m_ClearColor.b), static_cast<float>(m_ClearColor.a));
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			}
 
 			void GLFWWindow::SetInputMode(int32 mode, int32 value)

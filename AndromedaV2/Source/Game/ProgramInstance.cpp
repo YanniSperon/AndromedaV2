@@ -17,6 +17,7 @@ namespace Andromeda
 			//	delete it.second;
 			//}
 			//m_PointerManagers.clear();
+			Global::GetConsoleInstance().Warning("Deleting program instance");
 		}
 
 		void ProgramInstance::Update(Duration deltaTime)

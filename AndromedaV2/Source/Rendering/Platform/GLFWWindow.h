@@ -11,11 +11,14 @@ namespace Andromeda {
 			class GLFWWindow : public Window {
 			private:
 				GLFWwindow* m_WindowHandle;
+
+				void InternalInitialize(GLFWwindow* parentHandle);
 			public:
 				GLFWWindow(uint32 width, uint32 height, const String& windowTitle);
-				virtual ~GLFWWindow();
+				virtual ~GLFWWindow() override;
 
 				virtual void Initialize() override;
+				virtual void Initialize(Window* parent) override;
 				virtual void Deinitialize() override;
 
 				virtual void Update(Duration deltaTime) override;

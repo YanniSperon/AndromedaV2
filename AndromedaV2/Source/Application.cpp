@@ -23,19 +23,23 @@ int main() {
 
 	Rendering::Window* wndw = new Rendering::Platform::GLFWWindow(1920, 1080, std::string("New Title OpenGL"));
 	wndw->Initialize();
+	wndw->SetClearColor(Math::DVector4D(1.0, 0.0, 0.0, 1.0));
+	Rendering::Window* wndw2 = new Rendering::Platform::GLFWWindow(294, 150, std::string("Some pop-up"));
+	wndw2->Initialize(wndw);
+	wndw2->SetClearColor(Math::DVector4D(1.0, 0.0, 1.0, 1.0));
 
 	Rendering::Context* ctx = new Rendering::Platform::OpenGLContext();
 	ctx->Initialize();
-	ctx->SetClearColor(Math::FVector4D(1.0f, 0.0f, 0.0f, 0.0f));
 	ctx->AddWindow(wndw);
+	ctx->AddWindow(wndw2);
 
-	Rendering::Window* wndw2 = new Rendering::Platform::GLFWWindow(1280, 720, std::string("2222"));
-	wndw2->Initialize();
+	Rendering::Window* wndw3 = new Rendering::Platform::GLFWWindow(1280, 720, std::string("2222"));
+	wndw3->Initialize();
+	wndw3->SetClearColor(Math::DVector4D(0.0, 1.0, 0.0, 1.0));
 
 	Rendering::Context* ctx2 = new Rendering::Platform::OpenGLContext();
 	ctx2->Initialize();
-	ctx2->SetClearColor(Math::FVector4D(0.0f, 1.0f, 0.0f, 0.0f));
-	ctx2->AddWindow(wndw2);
+	ctx2->AddWindow(wndw3);
 
 	Game::ProgramInstance* inst = new Game::ProgramInstance();
 	inst->AddContext(ctx);
@@ -45,21 +49,25 @@ int main() {
 
 	TimePoint lastTime = std::chrono::high_resolution_clock::now();
 	TimePoint currentTime = lastTime;
+	DurationNanoseconds deltaTimeNanoseconds = DurationNanoseconds();
+	Duration deltaTimeWithoutTimeFactor = Duration();
+	Duration deltaTime = Duration();
 	uint64 currentProgramInstance = 0ull;
 	uint64 currentContextIndex = 0ull;
 	uint64 currentWindowIndex = 0ull;
+	Game::ProgramInstance* currentInstance = nullptr;
 
 	while (Global::GetProgramInstancesSize() > 0ull)
 	{
 		Global::SetCurrentProgramInstance(currentProgramInstance);
-		Game::ProgramInstance* currentInstance = Global::GetCurrentProgramInstance();
+		currentInstance = Global::GetCurrentProgramInstance();
 		if (currentInstance->GetContexts().size() > 0ull)
 		{
 			currentTime = std::chrono::high_resolution_clock::now();
-			DurationNanoseconds deltaTimeNanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - lastTime);
+			deltaTimeNanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - lastTime);
 			lastTime = currentTime;
-			Duration deltaTimeWithoutTimeFactor = deltaTimeNanoseconds.count() / 1000000000.0;
-			Duration deltaTime = deltaTimeWithoutTimeFactor * currentInstance->GetTimeConstant();
+			deltaTimeWithoutTimeFactor = deltaTimeNanoseconds.count() * 0.000000001;
+			deltaTime = deltaTimeWithoutTimeFactor * currentInstance->GetTimeConstant();
 	
 			Global::UpdateCurrentProgramInstance(deltaTime);
 	
@@ -72,7 +80,7 @@ int main() {
 					{
 						if (!currentInstance->GetContexts()[currentContextIndex]->GetWindows()[currentWindowIndex]->ShouldWindowClose())
 						{
-							currentInstance->GetContexts()[currentContextIndex]->GetWindows()[currentContextIndex]->Render(currentInstance->GetContexts()[currentContextIndex]->GetRenderers());
+							currentInstance->GetContexts()[currentContextIndex]->GetWindows()[currentWindowIndex]->Render(currentInstance->GetContexts()[currentContextIndex]->GetRenderers());
 							++currentWindowIndex;
 						}
 						else
@@ -101,8 +109,6 @@ int main() {
 			Global::RemoveProgramInstance(currentProgramInstance);
 		}
 	}
-
-	delete inst;
 
 	Global::Deinitialize();
 }

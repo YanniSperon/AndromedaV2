@@ -13,7 +13,6 @@ namespace Andromeda {
 		protected:
 			Array<Window*> m_Windows;
 			Array<Renderer*> m_Renderers;
-			Math::FVector4D m_ClearColor;
 			bool m_IsInitialized;
 
 		public:
@@ -37,8 +36,6 @@ namespace Andromeda {
 			virtual void RemoveWindow(Window* window, bool shouldDelete = true) = 0;
 			virtual void RemoveWindow(uint64 windowIndex, bool shouldDelete = true) = 0;
 
-			void SetClearColor(Math::FVector4D& clearColor);
-			const Math::FVector4D& GetClearColor();
 		};
 	}
 }

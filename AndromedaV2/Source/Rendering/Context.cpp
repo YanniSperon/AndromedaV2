@@ -3,7 +3,7 @@
 namespace Andromeda {
 	namespace Rendering {
 		Context::Context()
-			: m_Windows(), m_Renderers(), m_ClearColor(0.0f, 0.0f, 0.0f, 0.0f), m_Input(), m_IsInitialized(false)
+			: m_Windows(), m_Renderers(), m_Input(), m_IsInitialized(false)
 		{
 			m_Input.SetShouldCaptureKeyboardInput(true);
 			m_Input.SetShouldCaptureMouseInput(true);
@@ -29,6 +29,8 @@ namespace Andromeda {
 
 		void Context::Initialize()
 		{
+			Global::GetConsoleInstance().Warning("Initializing Context");
+
 			if (m_IsInitialized)
 			{
 				Global::GetConsoleInstance().FatalError("Failed context initialization, context is already initialized!");
@@ -38,6 +40,8 @@ namespace Andromeda {
 
 		void Context::Deinitialize()
 		{
+			Global::GetConsoleInstance().Warning("Deinitializing Context");
+
 			if (!m_IsInitialized)
 			{
 				Global::GetConsoleInstance().FatalError("Failed context deinitialization, context is already deinitialized!");
@@ -75,14 +79,6 @@ namespace Andromeda {
 		void Context::EndFrame()
 		{
 			m_Input.Flush();
-		}
-		void Context::SetClearColor(Math::FVector4D& clearColor)
-		{
-			m_ClearColor = clearColor;
-		}
-		const Math::FVector4D& Context::GetClearColor()
-		{
-			return m_ClearColor;
 		}
 	}
 }

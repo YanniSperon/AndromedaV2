@@ -15,18 +15,22 @@ namespace Andromeda {
 
 			OpenGLContext::~OpenGLContext()
 			{
+				if (m_IsInitialized)
+				{
+					Deinitialize();
+				}
 			}
 
 			void OpenGLContext::Initialize()
 			{
+				Global::GetConsoleInstance().Warning("Initializing OpenGLContext");
 				Context::Initialize();
-
 			}
 
 			void OpenGLContext::Deinitialize()
 			{
+				Global::GetConsoleInstance().Warning("Deinitializing OpenGLContext");
 				Context::Deinitialize();
-
 			}
 
 			void OpenGLContext::AddWindow(Window* window)
@@ -42,8 +46,6 @@ namespace Andromeda {
 				Context::PrepareFrame();
 
 				glfwPollEvents();
-
-				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			}
 
 			void OpenGLContext::EndFrame()
