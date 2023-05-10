@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Types.h"
+#include "MathDefinitions.h"
+#include "IntDefinitions.h"
 #include "Random.h"
 
 namespace Andromeda {

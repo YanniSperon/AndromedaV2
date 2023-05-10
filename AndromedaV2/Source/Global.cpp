@@ -1,35 +1,102 @@
 #include "Global.h"
 #include "Utility/Console.h"
+#include "Game/ProgramInstance.h"
+
+#include "glfw3.h"
 
 namespace Andromeda {
 
-	static std::chrono::steady_clock::time_point S_SystemStartTime;
-	static Console* S_GlobalConsole;
+	Array<Game::ProgramInstance*> Global::s_ProgramInstances = Array<Game::ProgramInstance*>();
+	uint64 Global::s_ProgramInstancesIndex = 0ull;
+	Console* Global::s_GlobalConsole = new Console(1024);
+	TimePoint Global::s_SystemStartTime = std::chrono::high_resolution_clock::now();
+	Global::RenderBackendType Global::s_RenderBackendType = Global::RenderBackendType::None;
 
 	void Global::Initialize()
 	{
-		S_SystemStartTime = std::chrono::high_resolution_clock::now();
-		S_GlobalConsole = new Console(1024);
+		s_SystemStartTime = std::chrono::high_resolution_clock::now();
 	}
 
 	Console& Global::GetConsoleInstance()
 	{
-		return *S_GlobalConsole;
+		return *s_GlobalConsole;
 	}
 
-	TimePoint& Global::GetStartTime()
+	const TimePoint& Global::GetStartTime()
 	{
-		return S_SystemStartTime;
+		return s_SystemStartTime;
 	}
 
-	void Global::Update()
+	const Global::RenderBackendType& Global::GetRenderBackendType()
 	{
-		//Call singleton instance update
+		return s_RenderBackendType;
 	}
 
-	void Global::Cleanup()
+	void Global::Deinitialize()
 	{
 		//Call singleton instance cleanup/deletion
-		delete S_GlobalConsole;
+		delete s_GlobalConsole;
+
+		SetRenderBackendType(Global::RenderBackendType::None);
 	}
+
+	void Global::UpdateCurrentProgramInstance(Duration deltaTime)
+	{
+		GetCurrentProgramInstance()->Update(deltaTime);
+	}
+
+	void Global::AddProgramInstance(Game::ProgramInstance* instance)
+	{
+		s_ProgramInstances.push_back(instance);
+	}
+
+	void Global::RemoveProgramInstance(uint64 index, bool shouldDelete)
+	{
+		if (shouldDelete) {
+			delete s_ProgramInstances[index];
+		}
+		s_ProgramInstances.erase(s_ProgramInstances.begin() + index);
+		s_ProgramInstancesIndex = 0ull;
+	}
+
+	uint64 Global::GetProgramInstancesSize()
+	{
+		return s_ProgramInstances.size();
+	}
+
+	Game::ProgramInstance* Global::GetCurrentProgramInstance()
+	{
+		return s_ProgramInstances[s_ProgramInstancesIndex];
+	}
+
+	void Global::SetCurrentProgramInstance(uint64 index)
+	{
+		s_ProgramInstancesIndex = index;
+	}
+
+	void Global::SetRenderBackendType(Global::RenderBackendType renderBackendType)
+	{
+		if (s_RenderBackendType != renderBackendType)
+		{
+			switch (s_RenderBackendType)
+			{
+			case RenderBackendType::OpenGL:
+				glfwTerminate();
+				break;
+			default:
+				break;
+			}
+
+			switch (renderBackendType)
+			{
+			case RenderBackendType::OpenGL:
+				Global::GetConsoleInstance().Assert(glfwInit(), "Failed GLFW Initialization!");
+				break;
+			default:
+				break;
+			}
+		}
+		s_RenderBackendType = renderBackendType;
+	}
+
 }

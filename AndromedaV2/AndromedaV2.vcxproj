@@ -1085,20 +1085,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Game\ProgramInstance.h" />
     <ClInclude Include="Source\Global.h" />
     <ClInclude Include="Source\Rendering\Context.h" />
-    <ClInclude Include="Source\Rendering\Instance.h" />
+    <ClInclude Include="Source\Rendering\Platform\GLFWWindow.h" />
     <ClInclude Include="Source\Rendering\Platform\OpenGLContext.h" />
+    <ClInclude Include="Source\Rendering\Renderer.h" />
     <ClInclude Include="Source\Rendering\Window.h" />
     <ClInclude Include="Source\Utility\Console.h" />
     <ClInclude Include="Source\Utility\Input.h" />
     <ClInclude Include="Source\Utility\IntDefinitions.h" />
     <ClInclude Include="Source\Utility\LedgeredList.h" />
-    <ClInclude Include="Source\Utility\MathExtensions.h" />
+    <ClInclude Include="Source\Utility\MathDefinitions.h" />
     <ClInclude Include="Source\Utility\PackagedAssets.h" />
     <ClInclude Include="Source\Utility\Pointers.h" />
     <ClInclude Include="Source\Utility\Random.h" />
-    <ClInclude Include="Source\Utility\ReferenceManager.h" />
     <ClInclude Include="Source\Utility\StandardCollectionsDefinitions.h" />
     <ClInclude Include="Source\Utility\StandardDefinitions.h" />
     <ClInclude Include="Source\Utility\TimeDefinitions.h" />
@@ -1390,13 +1391,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\Game\ProgramInstance.cpp" />
     <ClCompile Include="Source\Global.cpp" />
     <ClCompile Include="Source\Rendering\Context.cpp" />
+    <ClCompile Include="Source\Rendering\Platform\GLFWWindow.cpp" />
     <ClCompile Include="Source\Rendering\Platform\OpenGLContext.cpp" />
+    <ClCompile Include="Source\Rendering\Renderer.cpp" />
+    <ClCompile Include="Source\Rendering\Window.cpp" />
     <ClCompile Include="Source\Utility\Console.cpp" />
     <ClCompile Include="Source\Utility\Input.cpp" />
+    <ClCompile Include="Source\Utility\Pointers.cpp" />
     <ClCompile Include="Source\Utility\Random.cpp" />
-    <ClCompile Include="Source\Utility\ReferenceManager.cpp" />
     <ClCompile Include="Source\Utility\UUID.cpp" />
     <ClCompile Include="Source\Vendor\glm\detail\glm.cpp" />
     <ClCompile Include="Source\Vendor\stb\stb_image.cpp" />

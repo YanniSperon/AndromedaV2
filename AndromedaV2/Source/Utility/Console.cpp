@@ -5,7 +5,7 @@
 #include <cstdarg>
 #include <chrono>
 
-#include "MathExtensions.h"
+#include "MathDefinitions.h"
 
 #if defined(AD_EDITOR) && defined(AD_WIN64)
 #include <Windows.h>

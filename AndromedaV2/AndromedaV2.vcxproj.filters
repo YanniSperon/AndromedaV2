@@ -40,9 +40,6 @@
     <ClInclude Include="Source\Rendering\Context.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Rendering\Instance.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Rendering\Platform\OpenGLContext.h">
       <Filter>Rendering\Platform</Filter>
     </ClInclude>
@@ -58,7 +55,7 @@
     <ClInclude Include="Source\Utility\LedgeredList.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Utility\MathExtensions.h">
+    <ClInclude Include="Source\Utility\MathDefinitions.h">
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Source\Utility\PackagedAssets.h">
@@ -68,9 +65,6 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Source\Utility\Random.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utility\ReferenceManager.h">
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Source\Utility\Types.h">
@@ -932,6 +926,9 @@
     <ClInclude Include="Source\Utility\TimeDefinitions.h" />
     <ClInclude Include="Source\Utility\StandardCollectionsDefinitions.h" />
     <ClInclude Include="Source\Utility\StandardDefinitions.h" />
+    <ClInclude Include="Source\Rendering\Renderer.h" />
+    <ClInclude Include="Source\Game\ProgramInstance.h" />
+    <ClInclude Include="Source\Rendering\Platform\GLFWWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
@@ -948,9 +945,6 @@
     <ClCompile Include="Source\Utility\Random.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utility\ReferenceManager.cpp">
-      <Filter>Utility</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Vendor\glm\detail\glm.cpp">
       <Filter>Vendor\glm\detail</Filter>
     </ClCompile>
@@ -959,5 +953,10 @@
     </ClCompile>
     <ClCompile Include="Source\Utility\UUID.cpp" />
     <ClCompile Include="Source\Rendering\Context.cpp" />
+    <ClCompile Include="Source\Utility\Pointers.cpp" />
+    <ClCompile Include="Source\Game\ProgramInstance.cpp" />
+    <ClCompile Include="Source\Rendering\Window.cpp" />
+    <ClCompile Include="Source\Rendering\Platform\GLFWWindow.cpp" />
+    <ClCompile Include="Source\Rendering\Renderer.cpp" />
   </ItemGroup>
 </Project>

@@ -97,6 +97,16 @@ namespace Andromeda {
 	};
 }
 
+#define     AD_CURSOR                 0x00033001
+#define     AD_STICKY_KEYS            0x00033002
+#define     AD_STICKY_MOUSE_BUTTONS   0x00033003
+#define     AD_LOCK_KEY_MODS          0x00033004
+#define     AD_RAW_MOUSE_MOTION       0x00033005
+
+#define     AD_CURSOR_NORMAL          0x00034001
+#define     AD_CURSOR_HIDDEN          0x00034002
+#define     AD_CURSOR_DISABLED        0x00034003
+
 #define 	AD_KEY_UNKNOWN           0
 #define 	AD_KEY_SPACE             32
 #define 	AD_KEY_APOSTROPHE        39

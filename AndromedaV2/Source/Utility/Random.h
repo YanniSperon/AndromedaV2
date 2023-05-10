@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Types.h"
+#include "IntDefinitions.h"
 
 #include <random>
 
