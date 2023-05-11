@@ -5,7 +5,7 @@ namespace Andromeda
 	namespace Game
 	{
 		ProgramInstance::ProgramInstance()
-			: m_Contexts(), m_Random32(), m_Random64(), m_TimeConstant(1.0)//, m_PointerManagers()
+			: m_Contexts(), m_Random32(), m_Random64(), m_TimeConstant(1.0), m_IsInitialized(false)//, m_PointerManagers()
 		{
 
 		}
@@ -17,7 +17,32 @@ namespace Andromeda
 			//	delete it.second;
 			//}
 			//m_PointerManagers.clear();
-			Global::GetConsoleInstance().Warning("Deleting program instance");
+			if (m_IsInitialized)
+			{
+				Deinitialize();
+			}
+		}
+
+		void ProgramInstance::Initialize()
+		{
+			Global::GetConsoleInstance().Warning("Initializing ProgramInstance");
+
+			if (m_IsInitialized)
+			{
+				Global::GetConsoleInstance().FatalError("Failed ProgramInstance initialization, ProgramInstance is already initialized!");
+			}
+			m_IsInitialized = true;
+		}
+
+		void ProgramInstance::Deinitialize()
+		{
+			Global::GetConsoleInstance().Warning("Deinitializing ProgramInstance");
+
+			if (!m_IsInitialized)
+			{
+				Global::GetConsoleInstance().FatalError("Failed ProgramInstance deinitialization, ProgramInstance is already deinitialized!");
+			}
+			m_IsInitialized = false;
 		}
 
 		void ProgramInstance::Update(Duration deltaTime)
@@ -30,6 +55,10 @@ namespace Andromeda
 
 		void ProgramInstance::AddContext(Rendering::Context* context)
 		{
+			if (!context->IsInitialized())
+			{
+				context->Initialize();
+			}
 			m_Contexts.push_back(context);
 		}
 
@@ -68,6 +97,11 @@ namespace Andromeda
 		void ProgramInstance::SetTimeConstant(double newConstant)
 		{
 			m_TimeConstant = newConstant;
+		}
+
+		bool ProgramInstance::IsInitialized() const
+		{
+			return m_IsInitialized;
 		}
 
 	}

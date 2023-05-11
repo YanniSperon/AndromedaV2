@@ -60,5 +60,10 @@ namespace Andromeda {
 		{
 			return m_ClearColor;
 		}
+
+		bool Window::IsInitialized() const
+		{
+			return m_IsInitialized;
+		}
 	}
 }

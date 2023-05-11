@@ -71,6 +71,23 @@ namespace Andromeda {
 			return m_Renderers;
 		}
 
+		void Context::AddWindow(Window* window)
+		{
+			if (!window->IsInitialized())
+			{
+				if (m_Windows.size() > 0ull)
+				{
+					window->Initialize(m_Windows[0ull]);
+				}
+				else
+				{
+					window->Initialize();
+				}
+			}
+
+			m_Windows.push_back(window);
+		}
+
 		void Context::PrepareFrame()
 		{
 			m_Input.Prepare();
@@ -79,6 +96,46 @@ namespace Andromeda {
 		void Context::EndFrame()
 		{
 			m_Input.Flush();
+		}
+
+		void Context::RemoveWindow(Window* window, bool shouldDelete)
+		{
+			uint64 windowIndex = UINT64_MAX;
+			for (uint64 i = 0; i < m_Windows.size(); ++i)
+			{
+				if (m_Windows[i] == window)
+				{
+					windowIndex = i;
+					break;
+				}
+			}
+
+			if (windowIndex != UINT64_MAX)
+			{
+				if (shouldDelete)
+				{
+					delete window;
+				}
+
+				m_Windows.erase(m_Windows.begin() + windowIndex);
+			}
+		}
+
+		void Context::RemoveWindow(uint64 windowIndex, bool shouldDelete)
+		{
+			if (windowIndex < m_Windows.size())
+			{
+				if (shouldDelete)
+				{
+					delete m_Windows[windowIndex];
+				}
+				m_Windows.erase(m_Windows.begin() + windowIndex);
+			}
+		}
+
+		bool Context::IsInitialized() const
+		{
+			return m_IsInitialized;
 		}
 	}
 }

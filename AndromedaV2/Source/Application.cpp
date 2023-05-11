@@ -21,24 +21,24 @@ int main() {
 	Global::Initialize();
 	Global::SetRenderBackendType(Global::RenderBackendType::OpenGL);
 
+
+
+
+
 	Rendering::Window* wndw = new Rendering::Platform::GLFWWindow(1920, 1080, std::string("New Title OpenGL"));
-	wndw->Initialize();
 	wndw->SetClearColor(Math::DVector4D(1.0, 0.0, 0.0, 1.0));
+
 	Rendering::Window* wndw2 = new Rendering::Platform::GLFWWindow(294, 150, std::string("Some pop-up"));
-	wndw2->Initialize(wndw);
 	wndw2->SetClearColor(Math::DVector4D(1.0, 0.0, 1.0, 1.0));
 
 	Rendering::Context* ctx = new Rendering::Platform::OpenGLContext();
-	ctx->Initialize();
 	ctx->AddWindow(wndw);
 	ctx->AddWindow(wndw2);
 
 	Rendering::Window* wndw3 = new Rendering::Platform::GLFWWindow(1280, 720, std::string("2222"));
-	wndw3->Initialize();
 	wndw3->SetClearColor(Math::DVector4D(0.0, 1.0, 0.0, 1.0));
 
 	Rendering::Context* ctx2 = new Rendering::Platform::OpenGLContext();
-	ctx2->Initialize();
 	ctx2->AddWindow(wndw3);
 
 	Game::ProgramInstance* inst = new Game::ProgramInstance();
@@ -46,6 +46,10 @@ int main() {
 	inst->AddContext(ctx2);
 
 	Global::AddProgramInstance(inst);
+
+
+
+
 
 	TimePoint lastTime = std::chrono::high_resolution_clock::now();
 	TimePoint currentTime = lastTime;

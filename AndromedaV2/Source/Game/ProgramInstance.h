@@ -14,12 +14,16 @@ namespace Andromeda {
 			Random32 m_Random32;
 			Random64 m_Random64;
 			double m_TimeConstant;
+			bool m_IsInitialized;
 
 			//HashMap<UUID, PointerManager*> m_PointerManagers;
 
 		public:
 			ProgramInstance();
-			~ProgramInstance();
+			virtual ~ProgramInstance();
+
+			virtual void Initialize(); // Make sure to call if overwriting function
+			virtual void Deinitialize(); // Make sure to call if overwriting function
 
 			void Update(Duration deltaTime);
 
@@ -33,6 +37,8 @@ namespace Andromeda {
 
 			double GetTimeConstant();
 			void SetTimeConstant(double newConstant);
+
+			bool IsInitialized() const;
 
 			//template <class T>
 			//T* GetTypePointerManager()

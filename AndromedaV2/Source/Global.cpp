@@ -47,6 +47,10 @@ namespace Andromeda {
 
 	void Global::AddProgramInstance(Game::ProgramInstance* instance)
 	{
+		if (!instance->IsInitialized())
+		{
+			instance->Initialize();
+		}
 		s_ProgramInstances.push_back(instance);
 	}
 

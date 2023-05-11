@@ -17,8 +17,6 @@ namespace Andromeda {
 				virtual void AddWindow(Window* window) override;
 				virtual void PrepareFrame() override;
 				virtual void EndFrame() override;
-				virtual void RemoveWindow(Window* window, bool shouldDelete = true) override;
-				virtual void RemoveWindow(uint64 windowIndex, bool shouldDelete = true) override;
 
 				Window* GetWindowByGLFWHandle(GLFWwindow* handle);
 			};

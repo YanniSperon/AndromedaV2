@@ -35,10 +35,10 @@ namespace Andromeda {
 
 			void OpenGLContext::AddWindow(Window* window)
 			{
+				Context::AddWindow(window);
+
 				GLFWWindow* glfwWindow = static_cast<GLFWWindow*>(window);
 				glfwSetWindowUserPointer(glfwWindow->m_WindowHandle, this);
-
-				m_Windows.push_back(window);
 			}
 
 			void OpenGLContext::PrepareFrame()
@@ -56,42 +56,6 @@ namespace Andromeda {
 				{
 					GLFWWindow* window = static_cast<GLFWWindow*>(m_Windows[i]);
 					glfwSwapBuffers(window->m_WindowHandle);
-				}
-			}
-
-			void OpenGLContext::RemoveWindow(Window* window, bool shouldDelete)
-			{
-				uint64 windowIndex = UINT64_MAX;
-				for (uint64 i = 0; i < m_Windows.size(); ++i)
-				{
-					if (m_Windows[i] == window)
-					{
-						windowIndex = i;
-						break;
-					}
-				}
-
-				if (windowIndex != UINT64_MAX)
-				{
-					if (shouldDelete)
-					{
-						delete window;
-					}
-
-					m_Windows.erase(m_Windows.begin() + windowIndex);
-				}
-			}
-
-			void OpenGLContext::RemoveWindow(uint64 windowIndex, bool shouldDelete)
-			{
-				if (windowIndex < m_Windows.size())
-				{
-					if (shouldDelete)
-					{
-						delete m_Windows[windowIndex];
-					}
-					m_Windows.erase(m_Windows.begin() + windowIndex);
-
 				}
 			}
 

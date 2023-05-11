@@ -22,19 +22,21 @@ namespace Andromeda {
 			Context();
 			virtual ~Context();
 
-			virtual void Initialize();
-			virtual void Deinitialize();
+			virtual void Initialize(); // Make sure to call if overwriting function
+			virtual void Deinitialize(); // Make sure to call if overwriting function
 
 			virtual void Update(Duration deltaTime);
 
 			Array<Window*>& GetWindows();
 			Array<Renderer*>& GetRenderers();
 
-			virtual void AddWindow(Window* window) = 0;
+			virtual void AddWindow(Window* window); // Make sure to call if overwriting function
 			virtual void PrepareFrame();
 			virtual void EndFrame();
-			virtual void RemoveWindow(Window* window, bool shouldDelete = true) = 0;
-			virtual void RemoveWindow(uint64 windowIndex, bool shouldDelete = true) = 0;
+			virtual void RemoveWindow(Window* window, bool shouldDelete = true);
+			virtual void RemoveWindow(uint64 windowIndex, bool shouldDelete = true);
+
+			bool IsInitialized() const;
 
 		};
 	}
