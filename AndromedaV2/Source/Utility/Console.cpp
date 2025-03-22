@@ -6,6 +6,7 @@
 #include <chrono>
 
 #include "MathDefinitions.h"
+#include "TimeDefinitions.h"
 
 #if defined(AD_EDITOR) && defined(AD_WIN64)
 #include <Windows.h>
@@ -14,15 +15,28 @@
 namespace Andromeda {
 
 	Console::Console(uint64 maxLogLength, uint64 defaultBufferSize)
-		: m_Log(), m_PrintMutex(), m_MaxLogLength(maxLogLength), m_DefaultBufferSize(defaultBufferSize)
+		: m_Log(), m_PrintMutex(), m_MaxLogLength(maxLogLength), m_DefaultBufferSize(defaultBufferSize), m_OutputFile()
 	{
+	}
+
+	void Console::SetOutputFile(const String& filePath)
+	{
+		if (filePath != "") {
+			if (m_OutputFile.is_open()) {
+				m_OutputFile.close();
+			}
+			m_OutputFile.open(filePath);
+		}
+		else {
+			m_OutputFile.close();
+		}
 	}
 
 	void Console::Success(const char* fmt, ...)
 	{
 		va_list args;
 		va_start(args, fmt);
-		Success(m_DefaultBufferSize, fmt, args);
+		SuccessWithSize(m_DefaultBufferSize, fmt, args);
 		va_end(args);
 	}
 
@@ -30,7 +44,7 @@ namespace Andromeda {
 	{
 		va_list args;
 		va_start(args, fmt);
-		Info(m_DefaultBufferSize, fmt, args);
+		InfoWithSize(m_DefaultBufferSize, fmt, args);
 		va_end(args);
 	}
 
@@ -38,7 +52,7 @@ namespace Andromeda {
 	{
 		va_list args;
 		va_start(args, fmt);
-		Warning(m_DefaultBufferSize, fmt, args);
+		WarningWithSize(m_DefaultBufferSize, fmt, args);
 		va_end(args);
 	}
 
@@ -46,7 +60,7 @@ namespace Andromeda {
 	{
 		va_list args;
 		va_start(args, fmt);
-		Error(m_DefaultBufferSize, fmt, args);
+		ErrorWithSize(m_DefaultBufferSize, fmt, args);
 		va_end(args);
 	}
 
@@ -54,7 +68,7 @@ namespace Andromeda {
 	{
 		va_list args;
 		va_start(args, fmt);
-		FatalError(m_DefaultBufferSize, fmt, args);
+		FatalErrorWithSize(m_DefaultBufferSize, fmt, args);
 		va_end(args);
 	}
 
@@ -64,13 +78,13 @@ namespace Andromeda {
 		if (!value) {
 			va_list args;
 			va_start(args, fmt);
-			FatalError(m_DefaultBufferSize, fmt, args);
+			FatalErrorWithSize(m_DefaultBufferSize, fmt, args);
 			va_end(args);
 		}
 #endif
 	}
 
-	void Console::Success(uint64 bufferSize, const char* fmt, ...)
+	void Console::SuccessWithSize(uint64 bufferSize, const char* fmt, ...)
 	{
 #ifdef AD_DEBUG
 		va_list args;
@@ -100,15 +114,19 @@ namespace Andromeda {
 		va_end(args);
 		delete[] timestamp;
 		delete[] message;
+		if (m_OutputFile.is_open()) {
+			m_OutputFile << returnValue;
+			m_OutputFile.flush();
+		}
 #endif
 	}
 
-	void Console::Info(uint64 bufferSize, const char* fmt, ...)
+	void Console::InfoWithSize(uint64 bufferSize, const char* fmt, ...)
 	{
 #ifdef AD_DEBUG
 		va_list args;
 		va_start(args, fmt);
-		auto currentTime = std::chrono::high_resolution_clock::now();
+		TimePoint currentTime = std::chrono::high_resolution_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - Global::GetStartTime());
 		auto hours = std::chrono::duration_cast<std::chrono::hours>(duration);
 		auto minutes = std::chrono::duration_cast<std::chrono::minutes>(duration - hours);
@@ -133,10 +151,14 @@ namespace Andromeda {
 		va_end(args);
 		delete[] timestamp;
 		delete[] message;
+		if (m_OutputFile.is_open()) {
+			m_OutputFile << returnValue;
+			m_OutputFile.flush();
+		}
 #endif
 	}
 
-	void Console::Warning(uint64 bufferSize, const char* fmt, ...)
+	void Console::WarningWithSize(uint64 bufferSize, const char* fmt, ...)
 	{
 #ifdef AD_DEBUG
 		va_list args;
@@ -166,10 +188,14 @@ namespace Andromeda {
 		va_end(args);
 		delete[] timestamp;
 		delete[] message;
+		if (m_OutputFile.is_open()) {
+			m_OutputFile << returnValue;
+			m_OutputFile.flush();
+		}
 #endif
 	}
 
-	void Console::Error(uint64 bufferSize, const char* fmt, ...)
+	void Console::ErrorWithSize(uint64 bufferSize, const char* fmt, ...)
 	{
 #ifdef AD_DEBUG
 		va_list args;
@@ -199,10 +225,14 @@ namespace Andromeda {
 		va_end(args);
 		delete[] timestamp;
 		delete[] message;
+		if (m_OutputFile.is_open()) {
+			m_OutputFile << returnValue;
+			m_OutputFile.flush();
+		}
 #endif
 	}
 
-	void Console::FatalError(uint64 bufferSize, const char* fmt, ...)
+	void Console::FatalErrorWithSize(uint64 bufferSize, const char* fmt, ...)
 	{
 #ifdef AD_DEBUG
 		va_list args;
@@ -232,6 +262,22 @@ namespace Andromeda {
 		va_end(args);
 		delete[] timestamp;
 		delete[] message;
+		if (m_OutputFile.is_open()) {
+			m_OutputFile << returnValue;
+			m_OutputFile.flush();
+		}
+#endif
+	}
+
+	void Console::AssertWithSize(uint64 bufferSize, bool value, const char* fmt, ...)
+	{
+#ifdef AD_DEBUG
+		if (!value) {
+			va_list args;
+			va_start(args, fmt);
+			FatalErrorWithSize(bufferSize, fmt, args);
+			va_end(args);
+		}
 #endif
 	}
 }

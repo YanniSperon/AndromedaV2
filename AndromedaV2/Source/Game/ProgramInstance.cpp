@@ -25,22 +25,22 @@ namespace Andromeda
 
 		void ProgramInstance::Initialize()
 		{
-			Global::GetConsoleInstance().Warning("Initializing ProgramInstance");
+			Global::GetGlobalConsole().Warning("Initializing ProgramInstance");
 
 			if (m_IsInitialized)
 			{
-				Global::GetConsoleInstance().FatalError("Failed ProgramInstance initialization, ProgramInstance is already initialized!");
+				Global::GetGlobalConsole().FatalError("Failed ProgramInstance initialization, ProgramInstance is already initialized!");
 			}
 			m_IsInitialized = true;
 		}
 
 		void ProgramInstance::Deinitialize()
 		{
-			Global::GetConsoleInstance().Warning("Deinitializing ProgramInstance");
+			Global::GetGlobalConsole().Warning("Deinitializing ProgramInstance");
 
 			if (!m_IsInitialized)
 			{
-				Global::GetConsoleInstance().FatalError("Failed ProgramInstance deinitialization, ProgramInstance is already deinitialized!");
+				Global::GetGlobalConsole().FatalError("Failed ProgramInstance deinitialization, ProgramInstance is already deinitialized!");
 			}
 			m_IsInitialized = false;
 		}

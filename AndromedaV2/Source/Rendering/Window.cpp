@@ -17,31 +17,31 @@ namespace Andromeda {
 
 		void Window::Initialize()
 		{
-			Global::GetConsoleInstance().Warning("Initializing Window");
+			Global::GetGlobalConsole().Warning("Initializing Window");
 			if (m_IsInitialized)
 			{
-				Global::GetConsoleInstance().FatalError("Failed window initialization, window is already initialized!");
+				Global::GetGlobalConsole().FatalError("Failed window initialization, window is already initialized!");
 			}
 			m_IsInitialized = true;
 		}
 
 		void Window::Initialize(Window* parentWindow)
 		{
-			Global::GetConsoleInstance().Warning("Initializing Window with parent");
+			Global::GetGlobalConsole().Warning("Initializing Window with parent");
 			if (m_IsInitialized)
 			{
-				Global::GetConsoleInstance().FatalError("Failed window initialization, window is already initialized!");
+				Global::GetGlobalConsole().FatalError("Failed window initialization, window is already initialized!");
 			}
 			m_IsInitialized = true;
 		}
 
 		void Window::Deinitialize()
 		{
-			Global::GetConsoleInstance().Warning("Deinitializing Window");
+			Global::GetGlobalConsole().Warning("Deinitializing Window");
 
 			if (!m_IsInitialized)
 			{
-				Global::GetConsoleInstance().FatalError("Failed window deinitialization, window is already deinitialized!");
+				Global::GetGlobalConsole().FatalError("Failed window deinitialization, window is already deinitialized!");
 			}
 			m_IsInitialized = false;
 		}
@@ -51,7 +51,7 @@ namespace Andromeda {
 
 		}
 
-		void Window::SetClearColor(Math::DVector4D& clearColor)
+		void Window::SetClearColor(const Math::DVector4D& clearColor)
 		{
 			m_ClearColor = clearColor;
 		}

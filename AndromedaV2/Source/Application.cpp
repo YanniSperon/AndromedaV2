@@ -25,17 +25,17 @@ int main() {
 
 
 
-	Rendering::Window* wndw = new Rendering::Platform::GLFWWindow(1920, 1080, std::string("New Title OpenGL"));
+	Rendering::Window* wndw = new Rendering::Platform::GLFWWindow(1920, 1080, String("New Title OpenGL"));
 	wndw->SetClearColor(Math::DVector4D(1.0, 0.0, 0.0, 1.0));
 
-	Rendering::Window* wndw2 = new Rendering::Platform::GLFWWindow(294, 150, std::string("Some pop-up"));
+	Rendering::Window* wndw2 = new Rendering::Platform::GLFWWindow(294, 150, String("Some pop-up"));
 	wndw2->SetClearColor(Math::DVector4D(1.0, 0.0, 1.0, 1.0));
 
 	Rendering::Context* ctx = new Rendering::Platform::OpenGLContext();
 	ctx->AddWindow(wndw);
 	ctx->AddWindow(wndw2);
 
-	Rendering::Window* wndw3 = new Rendering::Platform::GLFWWindow(1280, 720, std::string("2222"));
+	Rendering::Window* wndw3 = new Rendering::Platform::GLFWWindow(1280, 720, String("2222"));
 	wndw3->SetClearColor(Math::DVector4D(0.0, 1.0, 0.0, 1.0));
 
 	Rendering::Context* ctx2 = new Rendering::Platform::OpenGLContext();
@@ -51,9 +51,9 @@ int main() {
 
 
 
-	TimePoint lastTime = std::chrono::high_resolution_clock::now();
+	TimePoint lastTime = HighResolutionClock::now();
 	TimePoint currentTime = lastTime;
-	DurationNanoseconds deltaTimeNanoseconds = DurationNanoseconds();
+	std::chrono::nanoseconds deltaTimeNanoseconds = std::chrono::nanoseconds();
 	Duration deltaTimeWithoutTimeFactor = Duration();
 	Duration deltaTime = Duration();
 	uint64 currentProgramInstance = 0ull;
@@ -67,10 +67,10 @@ int main() {
 		currentInstance = Global::GetCurrentProgramInstance();
 		if (currentInstance->GetContexts().size() > 0ull)
 		{
-			currentTime = std::chrono::high_resolution_clock::now();
+			currentTime = HighResolutionClock::now();
 			deltaTimeNanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - lastTime);
 			lastTime = currentTime;
-			deltaTimeWithoutTimeFactor = deltaTimeNanoseconds.count() * 0.000000001;
+			deltaTimeWithoutTimeFactor = RichTimeToDuration(deltaTimeNanoseconds);
 			deltaTime = deltaTimeWithoutTimeFactor * currentInstance->GetTimeConstant();
 	
 			Global::UpdateCurrentProgramInstance(deltaTime);

@@ -111,7 +111,7 @@ namespace Andromeda
 		T& Get(uint64 index)
 		{
 #ifdef AD_DEBUG
-			Global::GetConsoleInstance().Assert(index < m_Size, "Index %llu out of bounds!", index);
+			Global::GetGlobalConsole().Assert(index < m_Size, "Index %llu out of bounds!", index);
 #endif
 			uint64 ledgerIndex, ledgerIncrement;
 			return GetNodeAndIndices(index, ledgerIndex, ledgerIncrement)->m_Val;
@@ -122,7 +122,7 @@ namespace Andromeda
 		const Node* GetNode(uint64 index) const
 		{
 #ifdef AD_DEBUG
-			Global::GetConsoleInstance().Assert(index < m_Size, "Index %llu out of bounds!", index);
+			Global::GetGlobalConsole().Assert(index < m_Size, "Index %llu out of bounds!", index);
 #endif
 			uint64 ledgerIndex, ledgerIncrement;
 			return GetNodeAndIndices(index, ledgerIndex, ledgerIncrement);
@@ -133,7 +133,7 @@ namespace Andromeda
 		const Node* GetHeadNode() const
 		{
 #ifdef AD_DEBUG
-			Global::GetConsoleInstance().Assert(m_Head, "Head node does not exist!");
+			Global::GetGlobalConsole().Assert(m_Head, "Head node does not exist!");
 #endif
 			return m_Head;
 		}
@@ -143,7 +143,7 @@ namespace Andromeda
 		const Node* GetTailNode() const
 		{
 #ifdef AD_DEBUG
-			Global::GetConsoleInstance().Assert(m_Tail, "Tail node does not exist!");
+			Global::GetGlobalConsole().Assert(m_Tail, "Tail node does not exist!");
 #endif
 			return m_Tail;
 		}
@@ -188,7 +188,7 @@ namespace Andromeda
 #ifdef AD_DEBUG
 			else
 			{
-				Global::GetConsoleInstance().Error("Index %llu out of range", index);
+				Global::GetGlobalConsole().Error("Index %llu out of range", index);
 			}
 #endif
 		}

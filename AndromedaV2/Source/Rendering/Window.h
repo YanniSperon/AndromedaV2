@@ -31,7 +31,7 @@ namespace Andromeda {
 
 			virtual bool ShouldWindowClose() = 0;
 
-			void SetClearColor(Math::DVector4D& clearColor);
+			void SetClearColor(const Math::DVector4D& clearColor);
 			const Math::DVector4D& GetClearColor();
 
 			bool IsInitialized() const;

@@ -29,22 +29,22 @@ namespace Andromeda {
 
 		void Context::Initialize()
 		{
-			Global::GetConsoleInstance().Warning("Initializing Context");
+			Global::GetGlobalConsole().Warning("Initializing Context");
 
 			if (m_IsInitialized)
 			{
-				Global::GetConsoleInstance().FatalError("Failed context initialization, context is already initialized!");
+				Global::GetGlobalConsole().FatalError("Failed context initialization, context is already initialized!");
 			}
 			m_IsInitialized = true;
 		}
 
 		void Context::Deinitialize()
 		{
-			Global::GetConsoleInstance().Warning("Deinitializing Context");
+			Global::GetGlobalConsole().Warning("Deinitializing Context");
 
 			if (!m_IsInitialized)
 			{
-				Global::GetConsoleInstance().FatalError("Failed context deinitialization, context is already deinitialized!");
+				Global::GetGlobalConsole().FatalError("Failed context deinitialization, context is already deinitialized!");
 			}
 			m_IsInitialized = false;
 		}

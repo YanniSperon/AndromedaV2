@@ -35,7 +35,8 @@ namespace Andromeda {
 		static void Initialize();
 		static void Deinitialize();
 
-		static Console& GetConsoleInstance();
+		static Console& GetGlobalConsole();
+
 		static const TimePoint& GetStartTime();
 
 		static void AddProgramInstance(Game::ProgramInstance* instance);

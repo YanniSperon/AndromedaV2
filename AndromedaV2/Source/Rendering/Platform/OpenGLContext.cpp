@@ -23,13 +23,13 @@ namespace Andromeda {
 
 			void OpenGLContext::Initialize()
 			{
-				Global::GetConsoleInstance().Warning("Initializing OpenGLContext");
+				Global::GetGlobalConsole().Warning("Initializing OpenGLContext");
 				Context::Initialize();
 			}
 
 			void OpenGLContext::Deinitialize()
 			{
-				Global::GetConsoleInstance().Warning("Deinitializing OpenGLContext");
+				Global::GetGlobalConsole().Warning("Deinitializing OpenGLContext");
 				Context::Deinitialize();
 			}
 

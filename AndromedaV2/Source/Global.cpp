@@ -17,7 +17,7 @@ namespace Andromeda {
 		s_SystemStartTime = std::chrono::high_resolution_clock::now();
 	}
 
-	Console& Global::GetConsoleInstance()
+	Console& Global::GetGlobalConsole()
 	{
 		return *s_GlobalConsole;
 	}
@@ -94,7 +94,7 @@ namespace Andromeda {
 			switch (renderBackendType)
 			{
 			case RenderBackendType::OpenGL:
-				Global::GetConsoleInstance().Assert(glfwInit(), "Failed GLFW Initialization!");
+				Global::GetGlobalConsole().Assert(glfwInit(), "Failed GLFW Initialization!");
 				break;
 			default:
 				break;

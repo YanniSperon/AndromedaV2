@@ -11,17 +11,17 @@ namespace Andromeda {
 				switch (severity)
 				{
 				case GL_DEBUG_SEVERITY_HIGH:
-					Global::GetConsoleInstance().FatalError("GL CALLBACK:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
+					Global::GetGlobalConsole().FatalError("GL CALLBACK:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
 					break;
 				case GL_DEBUG_SEVERITY_MEDIUM:
-					Global::GetConsoleInstance().Error("GL CALLBACK:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
+					Global::GetGlobalConsole().Error("GL CALLBACK:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
 					break;
 				case GL_DEBUG_SEVERITY_LOW:
-					Global::GetConsoleInstance().Warning("GL CALLBACK:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
+					Global::GetGlobalConsole().Warning("GL CALLBACK:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
 					break;
 #ifdef AD_VERBOSE
 				case GL_DEBUG_SEVERITY_NOTIFICATION:
-					Global::GetConsoleInstance().Info("GL NOTIFICATION:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
+					Global::GetGlobalConsole().Info("GL NOTIFICATION:%s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? " ** GL ERROR **" : ""), type, severity, message);
 					break;
 #endif
 				default:
@@ -51,11 +51,11 @@ namespace Andromeda {
 				//////////////////////////////////////////////////////////////////////////////////////////////
 				// monitor = glfwGetPrimaryMonitor()
 				m_WindowHandle = glfwCreateWindow(m_Width, m_Height, m_WindowTitle.c_str(), NULL, parentHandle);
-				Global::GetConsoleInstance().Assert(m_WindowHandle, "Failed Window Creation!");
+				Global::GetGlobalConsole().Assert(m_WindowHandle, "Failed Window Creation!");
 				glfwMakeContextCurrent(m_WindowHandle);
 				//////////////////////////////////////////////////////////////////////////////////////////////
 				GLenum err = glewInit();
-				Global::GetConsoleInstance().Assert(err == GLEW_OK, "Failed GLEW Initialization - %s", reinterpret_cast<char const*>(glewGetErrorString(err)));
+				Global::GetGlobalConsole().Assert(static_cast<bool>(err == GLEW_OK), "Failed GLEW Initialization - %s", reinterpret_cast<const char*>(glewGetErrorString(err)));
 				//////////////////////////////////////////////////////////////////////////////////////////////
 				glEnable(GL_DEBUG_OUTPUT);
 				glEnable(GL_DEPTH_TEST);
@@ -74,7 +74,7 @@ namespace Andromeda {
 				glDebugMessageCallback(GLDebugMessageCallback, 0);
 				glfwSetErrorCallback([](int error, const char* description)
 					{
-						Global::GetConsoleInstance().Error("GLFW Error (%i): \"%s\"", error, description);
+						Global::GetGlobalConsole().Error("GLFW Error (%i): \"%s\"", error, description);
 					});
 				//////////////////////////////////////////////////////////////////////////////////////////////
 				glfwSetCursorPosCallback(m_WindowHandle, [](GLFWwindow* glfwWindow, double xPos, double yPos)
@@ -145,27 +145,27 @@ namespace Andromeda {
 				//////////////////////////////////////////////////////////////////////////////////////////////
 				GLfloat value, max_anisotropy = 8.0f; /* don't exceed this value...*/
 				glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &value);
-				Global::GetConsoleInstance().Warning("Anisotropy value: %f", value);
+				Global::GetGlobalConsole().Warning("Anisotropy value: %f", value);
 				//////////////////////////////////////////////////////////////////////////////////////////////
 			}
 
 			void GLFWWindow::Initialize()
 			{
-				Global::GetConsoleInstance().Warning("Initializing GLFWWindow");
+				Global::GetGlobalConsole().Warning("Initializing GLFWWindow");
 				Window::Initialize();
 				InternalInitialize(nullptr);
 			}
 
 			void GLFWWindow::Initialize(Window* parent)
 			{
-				Global::GetConsoleInstance().Warning("Initializing GLFWWindow with parent");
+				Global::GetGlobalConsole().Warning("Initializing GLFWWindow with parent");
 				Window::Initialize(parent);
 				InternalInitialize(static_cast<GLFWWindow*>(parent)->m_WindowHandle);
 			}
 
 			void GLFWWindow::Deinitialize()
 			{
-				Global::GetConsoleInstance().Warning("Deinitializing GLFWWindow");
+				Global::GetGlobalConsole().Warning("Deinitializing GLFWWindow");
 				Window::Deinitialize();
 				glfwDestroyWindow(m_WindowHandle);
 			}
