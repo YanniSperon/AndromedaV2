@@ -141,7 +141,7 @@ namespace Andromeda {
 						ctx->m_Input.SetMouseWasBlocked(true);
 					});
 				//////////////////////////////////////////////////////////////////////////////////////////////
-				glfwSetInputMode(m_WindowHandle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+				glfwSetInputMode(m_WindowHandle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 				//////////////////////////////////////////////////////////////////////////////////////////////
 				GLfloat value, max_anisotropy = 8.0f; /* don't exceed this value...*/
 				glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &value);

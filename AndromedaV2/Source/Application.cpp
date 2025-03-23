@@ -25,17 +25,17 @@ int main() {
 
 
 
-	Rendering::Window* wndw = new Rendering::Platform::GLFWWindow(1920, 1080, String("New Title OpenGL"));
+	Rendering::Window* wndw = new Rendering::Platform::GLFWWindow(1920, 1080, String("Primary Window"));
 	wndw->SetClearColor(Math::DVector4D(1.0, 0.0, 0.0, 1.0));
 
-	Rendering::Window* wndw2 = new Rendering::Platform::GLFWWindow(294, 150, String("Some pop-up"));
+	Rendering::Window* wndw2 = new Rendering::Platform::GLFWWindow(294, 150, String("Popup Window"));
 	wndw2->SetClearColor(Math::DVector4D(1.0, 0.0, 1.0, 1.0));
 
 	Rendering::Context* ctx = new Rendering::Platform::OpenGLContext();
 	ctx->AddWindow(wndw);
 	ctx->AddWindow(wndw2);
 
-	Rendering::Window* wndw3 = new Rendering::Platform::GLFWWindow(1280, 720, String("2222"));
+	Rendering::Window* wndw3 = new Rendering::Platform::GLFWWindow(1280, 720, String("Secondary Window"));
 	wndw3->SetClearColor(Math::DVector4D(0.0, 1.0, 0.0, 1.0));
 
 	Rendering::Context* ctx2 = new Rendering::Platform::OpenGLContext();
