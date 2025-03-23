@@ -1,3 +1,3 @@
 # AndromedaV2
 
-One last shot at this
+Currently just the window management system for Andromeda Engine
